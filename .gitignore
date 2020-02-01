@@ -1,4 +1,4 @@
 bin
 obj
 .vs
-appsettings.json
+ProcessFlowSProj.API/appsettings.json
