@@ -15,5 +15,13 @@ namespace ProcessFlowSProj.API.Data
         }
 
         public DbSet<Value> Values { get; set; }
+        public DbSet<UserLoginEntity> UserLoginEntities { get; set; }
+        public DbSet<UserEntity> UserEntities { get; set; }
+
+
+        //protected override void OnModelCreating(ModelBuilder modelBuilder)
+        //{
+
+        //}
     }
 }

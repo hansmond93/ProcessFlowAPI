@@ -6,9 +6,21 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20200130011203_InitialCreate.cs" />
+    <Compile Remove="Migrations\20200130011203_InitialCreate.Designer.cs" />
+    <Compile Remove="Migrations\20200130175718_addedUserLoginEntity.cs" />
+    <Compile Remove="Migrations\20200130175718_addedUserLoginEntity.Designer.cs" />
+    <Compile Remove="Migrations\20200130182244_addedUserEntity.cs" />
+    <Compile Remove="Migrations\20200130182244_addedUserEntity.Designer.cs" />
+    <Compile Remove="Migrations\20200131083702_EntityConfifUserUserLogin.cs" />
+    <Compile Remove="Migrations\20200131083702_EntityConfifUserUserLogin.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="2.2.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.3" />
   </ItemGroup>
 
 </Project>
