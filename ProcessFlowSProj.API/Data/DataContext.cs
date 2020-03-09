@@ -14,10 +14,16 @@ namespace ProcessFlowSProj.API.Data
 
         }
 
-        public DbSet<Value> Values { get; set; }
-        public DbSet<UserLoginEntity> UserLoginEntities { get; set; }
-        public DbSet<UserEntity> UserEntities { get; set; }
-
+        public DbSet<StaffLoginEntity> UserLoginEntities { get; set; }
+        public DbSet<StaffEntity> UserEntities { get; set; }
+        public DbSet<ApprovalLevelEntity> ApprovalLevelEntities { get; set; }
+        public DbSet<ApprovalStatusEntity> ApprovalStatusEntities { get; set; }
+        public DbSet<OperationEntity> OperationEntities { get; set; }
+        public DbSet<StaffEntity> StaffEntities { get; set; }
+        public DbSet<StaffLoginEntity> StaffLoginEntities { get; set; }
+        public DbSet<StaffRoleEntity> StaffRoleEntities { get; set; }
+        public DbSet<WorkFLowStatusEntity> Entities { get; set; }
+        public DbSet<WorkFlowTrailEntity> WorkFlowTrailEntities { get; set; }
 
         //protected override void OnModelCreating(ModelBuilder modelBuilder)
         //{

@@ -28,7 +28,7 @@ namespace ProcessFlowSProj.API.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register(UserForRegisterationDto userForReg)
+        public async Task<IActionResult> Register(StaffForRegisterationDto userForReg)
         {
             //Validate Request
             userForReg.Username = userForReg.Username.ToLower();
@@ -36,7 +36,7 @@ namespace ProcessFlowSProj.API.Controllers
             if (await _iAuthRepo.UserExists(userForReg.Username))
                 return BadRequest("Username already exists");
 
-            var userToCreate = new UserEntity
+            var userToCreate = new StaffEntity
             {
                 FirstName = userForReg.FirstName,
                 LastName = userForReg.LastName,
@@ -53,7 +53,7 @@ namespace ProcessFlowSProj.API.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login(UserForLoginDto userForLogin)
+        public async Task<IActionResult> Login(StaffForLoginDto userForLogin)
         {
             var userFromRepo = await _iAuthRepo.Login(userForLogin.Username, userForLogin.Password);
 
@@ -61,14 +61,14 @@ namespace ProcessFlowSProj.API.Controllers
             {
                 return Unauthorized();
             }
-            var userFromRepoDetails = await _iAuthRepo.GetUserDetailsWithUserLoginId(userFromRepo.UserLoginId);
+            var userFromRepoDetails = await _iAuthRepo.GetUserDetailsWithUserLoginId(userFromRepo.StaffLoginId);
             if (userFromRepoDetails == null)
             {
                 return Unauthorized();  //check for other kindda trouble
             }
             var claims = new[]
             {
-                new Claim(ClaimTypes.NameIdentifier, userFromRepoDetails.UserId.ToString()),
+                new Claim(ClaimTypes.NameIdentifier, userFromRepoDetails.StaffId.ToString()),
                 new Claim(ClaimTypes.Name, userFromRepoDetails.Username)
             };
 

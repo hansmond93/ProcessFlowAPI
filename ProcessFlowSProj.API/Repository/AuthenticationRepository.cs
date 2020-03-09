@@ -16,7 +16,7 @@ namespace ProcessFlowSProj.API.Repository
         {
             _context = context;
         }
-        public async Task<UserLoginEntity> Login(string username, string password)
+        public async Task<StaffLoginEntity> Login(string username, string password)
         {
             var user = await _context.UserLoginEntities.FirstOrDefaultAsync(x => x.Username == username.ToLower());
 
@@ -29,11 +29,11 @@ namespace ProcessFlowSProj.API.Repository
         }
 
 
-        public async Task<UserLoginEntity> Register(UserEntity user, string password)
+        public async Task<StaffLoginEntity> Register(StaffEntity user, string password)
         {
             CreatePasswordHash(password, out byte[] passwordHash, out byte[] passwordSalt); //this syntax automatically defines the passworldSalt and passwordHash so they ara available in this method
 
-            var userLogin = new UserLoginEntity
+            var userLogin = new StaffLoginEntity
             {
                 PasswordHash = passwordHash,
                 PasswordSalt = passwordSalt,
@@ -44,7 +44,7 @@ namespace ProcessFlowSProj.API.Repository
 
             if(await _context.SaveChangesAsync() > 0)
             {
-                user.UserLoginEntityId = userLogin.UserLoginId;
+                user.StaffLoginEntityId = userLogin.StaffLoginId;
             }
 
             await _context.UserEntities.AddAsync(user);
@@ -64,9 +64,9 @@ namespace ProcessFlowSProj.API.Repository
             return false;
         }
 
-        public async Task<UserEntity> GetUserDetailsWithUserLoginId(int id)
+        public async Task<StaffEntity> GetUserDetailsWithUserLoginId(int id)
         {
-            var userDetails = await _context.UserEntities.FirstOrDefaultAsync(x => x.UserLoginEntityId == id);
+            var userDetails = await _context.UserEntities.FirstOrDefaultAsync(x => x.StaffLoginEntityId == id);
 
             return userDetails;
         }
