@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ProcessFlowSProj.API.Data;
 
 namespace ProcessFlowSProj.API.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20200310130209_InitialClasseswithFK")]
+    partial class InitialClasseswithFK
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -31,13 +33,13 @@ namespace ProcessFlowSProj.API.Migrations
 
                     b.Property<int>("Position");
 
-                    b.Property<int>("RoleId");
+                    b.Property<int>("StaffId");
 
                     b.HasKey("ApprovalLevelId");
 
                     b.HasIndex("OperationId");
 
-                    b.HasIndex("RoleId");
+                    b.HasIndex("StaffId");
 
                     b.ToTable("ApprovalLevelEntities");
                 });
@@ -198,9 +200,9 @@ namespace ProcessFlowSProj.API.Migrations
                         .HasForeignKey("OperationId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("ProcessFlowSProj.API.Entities.StaffRoleEntity", "StaffRoleEntity")
+                    b.HasOne("ProcessFlowSProj.API.Entities.StaffEntity", "StaffEntity")
                         .WithMany()
-                        .HasForeignKey("RoleId")
+                        .HasForeignKey("StaffId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

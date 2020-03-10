@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -14,6 +15,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using ProcessFlowSProj.API.Data;
+using ProcessFlowSProj.API.Entities;
 using ProcessFlowSProj.API.Interface;
 using ProcessFlowSProj.API.Repository;
 
@@ -31,6 +33,7 @@ namespace ProcessFlowSProj.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             //services.AddDbContext<DataContext>(x => x.UseSqlite(Configuration.GetConnectionString("SqlServerConnection")));
             services.AddDbContext<DataContext>(x => x.UseSqlServer(Configuration.GetConnectionString("SqlServerConnection")));
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
@@ -48,6 +51,7 @@ namespace ProcessFlowSProj.API
 
                     });
             services.AddScoped<IAuthenticationRepository, AuthenticationRepository>();
+            services.AddScoped<IWorkFlow, WorkFlow>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

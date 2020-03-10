@@ -14,11 +14,11 @@ namespace ProcessFlowSProj.API.Entities
         [Required]
         public string StatusName { get; set; }
 
-        private static readonly byte Initiation = 0;
+        public static readonly byte Initiation = 0;
 
-        private static readonly byte Ongoing = 1;
+        public static readonly byte Ongoing = 1;
 
-        private static readonly byte Concluded = 1;
+        public static readonly byte Completed = 2;
 
 
     }

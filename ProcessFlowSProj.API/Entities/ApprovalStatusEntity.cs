@@ -12,10 +12,11 @@ namespace ProcessFlowSProj.API.Entities
         public int ApprovalStatusId { get; set; }
         public string ApprovalStatusName { get; set; }
 
-        private static readonly byte Pending = 0;
-        private static readonly byte Procesing = 1;
-        private static readonly byte Approved = 2;
-        private static readonly byte Rejected = 3;
+        public static readonly byte Pending = 0;
+        public static readonly byte Procesing = 1;
+        public static readonly byte Approved = 2;
+        public static readonly byte Rejected = 3;
+        public static readonly byte Referred = 4;
         
     }
 }

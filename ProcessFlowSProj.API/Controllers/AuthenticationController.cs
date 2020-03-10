@@ -68,8 +68,9 @@ namespace ProcessFlowSProj.API.Controllers
             }
             var claims = new[]
             {
-                new Claim(ClaimTypes.NameIdentifier, userFromRepoDetails.StaffId.ToString()),
-                new Claim(ClaimTypes.Name, userFromRepoDetails.Username)
+                //new Claim(ClaimTypes.NameIdentifier, userFromRepoDetails.StaffId.ToString()),
+                new Claim("Username", userFromRepoDetails.Username),
+                new Claim("StaffId", userFromRepoDetails.StaffId.ToString())
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_iConfig.GetSection("AppSettings:Token").Value));

@@ -18,13 +18,13 @@ namespace ProcessFlowSProj.API.Entities
         public int TargetId { get; set; }
 
         [ForeignKey("ApprovalLevelEntity")]
-        public int FromLevelId { get; set; }
+        public int? FromLevelId { get; set; }
 
         [ForeignKey("ApprovalLevelEntity")]
         public int? ToLevelId { get; set; }
 
         [ForeignKey("StaffEntity")]
-        public int ApprovedByStaffId { get; set; }  //the staffId that finally Approves the request in case the assignee is AWAY e.g LEAVE
+        public int? ApprovedByStaffId { get; set; }  //the staffId that finally Approves the request in case the assignee is AWAY e.g LEAVE
 
         [ForeignKey("StaffEntity")]
         public int FromStaffId { get; set; }
@@ -40,5 +40,10 @@ namespace ProcessFlowSProj.API.Entities
         [ForeignKey("WorkFlowStatusEntity")]
         public int StatusId { get; set; }
 
+        //public ApprovalLevelEntity ApprovalLevelEntity { get; set; }
+
+        //public StaffEntity StaffEntity { get; set; }
+
+        public OperationEntity OperationEntity { get; set; }
     }
 }
