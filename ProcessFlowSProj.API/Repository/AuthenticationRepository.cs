@@ -18,7 +18,7 @@ namespace ProcessFlowSProj.API.Repository
         }
         public async Task<StaffLoginEntity> Login(string username, string password)
         {
-            var user = await _context.UserLoginEntities.FirstOrDefaultAsync(x => x.Username == username.ToLower());
+            var user = await _context.UserLoginEntities.FirstOrDefaultAsync(x => x.StaffEntity.Username.ToLower() == username.ToLower());
 
             if (user == null)
                 return null;
@@ -32,12 +32,11 @@ namespace ProcessFlowSProj.API.Repository
         public async Task<StaffLoginEntity> Register(StaffEntity user, string password)
         {
             CreatePasswordHash(password, out byte[] passwordHash, out byte[] passwordSalt); //this syntax automatically defines the passworldSalt and passwordHash so they ara available in this method
-
+            
             var userLogin = new StaffLoginEntity
             {
                 PasswordHash = passwordHash,
                 PasswordSalt = passwordSalt,
-                Username = user.Username.ToLower()
             };
 
             await _context.UserLoginEntities.AddAsync(userLogin);
@@ -58,7 +57,7 @@ namespace ProcessFlowSProj.API.Repository
 
         public async Task<bool> UserExists(string username)
         {
-            if (await _context.UserLoginEntities.AnyAsync(x => x.Username.ToLower() == username.ToLower()))
+            if (await _context.UserLoginEntities.AnyAsync(x => x.StaffEntity.Username.ToLower() == username.ToLower()))
                 return true;
 
             return false;

@@ -26,9 +26,9 @@ namespace ProcessFlowSProj.API.Controllers
             if (testApprovalDto == null)
                 return BadRequest();
 
-            var result = _workFlow.GoForApproval(testApprovalDto.OperationId, testApprovalDto.TargetId, testApprovalDto.ToStaffId, testApprovalDto.FromStaffId);
+            //var result = _workFlow.GoForApproval(testApprovalDto.OperationId, testApprovalDto.TargetId, testApprovalDto.ToStaffId, testApprovalDto.FromStaffId);
             
-            return Ok(result);
+            return Ok();
         }
 
 

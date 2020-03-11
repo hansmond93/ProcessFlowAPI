@@ -35,10 +35,12 @@ namespace ProcessFlowSProj.API.Entities
         public int RequestStaffId { get; set; }
 
         [ForeignKey("ApprovalStatusEntity")]
-        public int ApprovalStatusId { get; set; }
+        public byte ApprovalStatusId { get; set; }
 
         [ForeignKey("WorkFlowStatusEntity")]
-        public int StatusId { get; set; }
+        public byte StatusId { get; set; }
+
+        public string Comment { get; set; }
 
         //public ApprovalLevelEntity ApprovalLevelEntity { get; set; }
 

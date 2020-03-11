@@ -25,6 +25,7 @@ namespace ProcessFlowSProj.API.Data
         public DbSet<WorkFLowStatusEntity> Entities { get; set; }
         public DbSet<WorkFlowTrailEntity> WorkFlowTrailEntities { get; set; }
 
+
         //protected override void OnModelCreating(ModelBuilder modelBuilder)
         //{
 

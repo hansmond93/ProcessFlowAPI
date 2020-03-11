@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -19,9 +20,11 @@ namespace ProcessFlowSProj.API.Entities.BaseEntities
         [Required]
         public string Username { get; set; }
 
+
         [Required]
         public string Gender { get; set; }
         
         public string StaffCode { get; set; }
+        
     }
 }

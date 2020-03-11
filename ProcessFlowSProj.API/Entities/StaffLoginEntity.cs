@@ -13,9 +13,6 @@ namespace ProcessFlowSProj.API.Entities
         public int StaffLoginId { get; set; }
 
         [Required]
-        public string Username { get; set; }
-
-        [Required]
         public byte[] PasswordHash { get; set; }
 
         [Required]
