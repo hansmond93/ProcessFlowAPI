@@ -31,7 +31,7 @@ namespace ProcessFlowSProj.API.Controllers
         public async Task<IActionResult> Register(StaffForRegisterationDto userForReg)
         {
             //Validate Request
-            userForReg.Username = userForReg.Username.ToLower();
+            userForReg.Username = userForReg.Username.Trim().ToLower();
 
             if (await _iAuthRepo.UserExists(userForReg.Username))
                 return BadRequest("Username already exists");
@@ -40,7 +40,10 @@ namespace ProcessFlowSProj.API.Controllers
             {
                 FirstName = userForReg.FirstName,
                 LastName = userForReg.LastName,
-                Username = userForReg.Username
+                MiddleName = userForReg.MiddleName,
+                Username = userForReg.Username,
+                Gender = userForReg.Gender,
+                RoleId = userForReg.RoleId
             };
 
             var createdUser = await _iAuthRepo.Register(userToCreate, userForReg.Password);
