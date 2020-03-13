@@ -7,6 +7,6 @@ namespace ProcessFlowSProj.API.Interface
 {
     public interface IWorkFlow
     {
-        void ProcessRequest();
+        //void ProcessRequest();
     }
 }

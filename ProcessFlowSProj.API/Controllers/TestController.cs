@@ -22,7 +22,7 @@ namespace ProcessFlowSProj.API.Controllers
         }
 
         //api/test/goforapproval
-        [HttpPost("goForApproval", Name ="GetCArs") ]
+        [HttpPost("goForApproval") ]
         public IActionResult TestGoForApproval(TestGoForApprovalDto testApprovalDto)
         {
             if (testApprovalDto == null)
