@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -14,10 +15,13 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using ProcessFlowSProj.API.Common;
 using ProcessFlowSProj.API.Data;
 using ProcessFlowSProj.API.Entities;
+using ProcessFlowSProj.API.Helpers;
 using ProcessFlowSProj.API.Interface;
 using ProcessFlowSProj.API.Repository;
+using ProcessFlowSProj.API.Services.Extensions;
 
 namespace ProcessFlowSProj.API
 {
@@ -38,6 +42,9 @@ namespace ProcessFlowSProj.API
             services.AddDbContext<DataContext>(x => x.UseSqlServer(Configuration.GetConnectionString("SqlServerConnection")));
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddCors();
+            services.AddSwagger();
+            services.Configure<CloudinarySettings>(Configuration.GetSection("CloudinarySettings"));
+            services.AddAutoMapper();
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                     {
@@ -52,6 +59,11 @@ namespace ProcessFlowSProj.API
                     });
             services.AddScoped<IAuthenticationRepository, AuthenticationRepository>();
             services.AddScoped<IWorkFlow, WorkFlow>();
+            services.AddScoped<IProjectRepository, ProjectRepository>();
+            services.AddScoped<IImagesRepository, ImagesRepository>();
+            services.AddScoped<ITokenDecryptionHelper, TokenDecryptionHelper>();
+            services.AddScoped<ISetupRepository, SetupRepository>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -64,6 +76,8 @@ namespace ProcessFlowSProj.API
             app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
             app.UseAuthentication();
             app.UseMvc();
+
+            app.UseCustomSwaggerApi();
         }
     }
 }

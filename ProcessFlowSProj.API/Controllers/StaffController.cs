@@ -12,6 +12,6 @@ namespace ProcessFlowSProj.API.Controllers
     [ApiController]
     public class StaffController : ControllerBase
     {
-        TokenDecryptionHelper token = new TokenDecryptionHelper();
+        
     }
 }

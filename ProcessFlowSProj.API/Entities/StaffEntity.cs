@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace ProcessFlowSProj.API.Entities
 {
-    public class StaffEntity : StaffBaseEntity
+    public class StaffEntity
     {
         [Key]
         public int StaffId { get; set; }
@@ -22,6 +22,22 @@ namespace ProcessFlowSProj.API.Entities
         public int RoleId { get; set; }
 
         public StaffRoleEntity StaffRoleEntity { get; set; }
-        
+        [Required]
+        public string FirstName { get; set; }
+
+        [Required]
+        public string LastName { get; set; }
+
+        public string MiddleName { get; set; }
+
+        [Required]
+        public string Username { get; set; }
+
+
+        [Required]
+        public string Gender { get; set; }
+
+        public string StaffCode { get; set; }
+
     }
 }

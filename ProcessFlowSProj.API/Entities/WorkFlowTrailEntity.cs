@@ -27,7 +27,7 @@ namespace ProcessFlowSProj.API.Entities
         public int? ApprovedByStaffId { get; set; }  //the staffId that finally Approves the request in case the assignee is AWAY e.g LEAVE
 
         [ForeignKey("StaffEntity")]
-        public int FromStaffId { get; set; }
+        public int? FromStaffId { get; set; }
 
         [ForeignKey("StaffEntity")]
         public int? ToStaffId { get; set; }
@@ -47,5 +47,7 @@ namespace ProcessFlowSProj.API.Entities
         //public StaffEntity StaffEntity { get; set; }
 
         public OperationEntity OperationEntity { get; set; }
+
+        public DateTime DateTimeApproved { get; set; }
     }
 }

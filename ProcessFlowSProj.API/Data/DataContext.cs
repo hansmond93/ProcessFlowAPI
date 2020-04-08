@@ -22,6 +22,8 @@ namespace ProcessFlowSProj.API.Data
         public DbSet<StaffRoleEntity> StaffRoleEntities { get; set; }
         public DbSet<WorkFLowStatusEntity> WorkFLowStatusEntity { get; set; }
         public DbSet<WorkFlowTrailEntity> WorkFlowTrailEntities { get; set; }
+        public DbSet<ImagesEntity> ImagesEntities { get; set; }
+        public DbSet<ProjectEntity> ProjectEntities { get; set; }
 
 
 
