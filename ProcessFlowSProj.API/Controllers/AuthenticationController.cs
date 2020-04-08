@@ -28,32 +28,43 @@ namespace ProcessFlowSProj.API.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register(UserForRegisterationDto userForReg)
+        public async Task<IActionResult> Register(StaffForRegisterationDto userForReg)
         {
-            //Validate Request
-            userForReg.Username = userForReg.Username.ToLower();
-
-            if (await _iAuthRepo.UserExists(userForReg.Username))
-                return BadRequest("Username already exists");
-
-            var userToCreate = new UserEntity
+            try
             {
-                FirstName = userForReg.FirstName,
-                LastName = userForReg.LastName,
-                Username = userForReg.Username
-            };
+                //Validate Request
+                userForReg.Username = userForReg.Username.Trim().ToLower();
 
-            var createdUser = await _iAuthRepo.Register(userToCreate, userForReg.Password);
+                if (await _iAuthRepo.UserExists(userForReg.Username))
+                    return BadRequest("Username already exists");
 
-            if (createdUser == null)
-                return StatusCode(500);
+                var userToCreate = new StaffEntity
+                {
+                    FirstName = userForReg.FirstName,
+                    LastName = userForReg.LastName,
+                    MiddleName = userForReg.MiddleName,
+                    Username = userForReg.Username,
+                    Gender = userForReg.Gender,
+                    RoleId = userForReg.RoleId
+                };
 
-            return StatusCode(201);
+                var createdUser = await _iAuthRepo.Register(userToCreate, userForReg.Password);
+
+                if (createdUser == null)
+                    return StatusCode(500);
+
+                return StatusCode(201);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
             
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login(UserForLoginDto userForLogin)
+        public async Task<IActionResult> Login(StaffForLoginDto userForLogin)
         {
             var userFromRepo = await _iAuthRepo.Login(userForLogin.Username, userForLogin.Password);
 
@@ -61,15 +72,16 @@ namespace ProcessFlowSProj.API.Controllers
             {
                 return Unauthorized();
             }
-            var userFromRepoDetails = await _iAuthRepo.GetUserDetailsWithUserLoginId(userFromRepo.UserLoginId);
+            var userFromRepoDetails = await _iAuthRepo.GetUserDetailsWithUserLoginId(userFromRepo.StaffLoginId);
             if (userFromRepoDetails == null)
             {
                 return Unauthorized();  //check for other kindda trouble
             }
             var claims = new[]
             {
-                new Claim(ClaimTypes.NameIdentifier, userFromRepoDetails.UserId.ToString()),
-                new Claim(ClaimTypes.Name, userFromRepoDetails.Username)
+                //new Claim(ClaimTypes.NameIdentifier, userFromRepoDetails.StaffId.ToString()),
+                new Claim("Username", userFromRepoDetails.Username),
+                new Claim("StaffId", userFromRepoDetails.StaffId.ToString())
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_iConfig.GetSection("AppSettings:Token").Value));

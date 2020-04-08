@@ -16,9 +16,9 @@ namespace ProcessFlowSProj.API.Repository
         {
             _context = context;
         }
-        public async Task<UserLoginEntity> Login(string username, string password)
+        public async Task<StaffLoginEntity> Login(string username, string password)
         {
-            var user = await _context.UserLoginEntities.FirstOrDefaultAsync(x => x.Username == username.ToLower());
+            var user = await _context.StaffLoginEntities.FirstOrDefaultAsync(x => x.StaffEntity.Username.ToLower() == username.ToLower());
 
             if (user == null)
                 return null;
@@ -29,44 +29,46 @@ namespace ProcessFlowSProj.API.Repository
         }
 
 
-        public async Task<UserLoginEntity> Register(UserEntity user, string password)
+        public async Task<StaffLoginEntity> Register(StaffEntity user, string password)
         {
             CreatePasswordHash(password, out byte[] passwordHash, out byte[] passwordSalt); //this syntax automatically defines the passworldSalt and passwordHash so they ara available in this method
 
-            var userLogin = new UserLoginEntity
+            await _context.StaffEntities.AddAsync(user);
+
+            if (await _context.SaveChangesAsync() <= 0)
+                return null;
+
+            var userLogin = new StaffLoginEntity
             {
                 PasswordHash = passwordHash,
                 PasswordSalt = passwordSalt,
-                Username = user.Username.ToLower()
+                StaffId = user.StaffId
             };
 
-            await _context.UserLoginEntities.AddAsync(userLogin);
+            await _context.StaffLoginEntities.AddAsync(userLogin);
 
-            if(await _context.SaveChangesAsync() > 0)
-            {
-                user.UserLoginEntityId = userLogin.UserLoginId;
-            }
-
-            await _context.UserEntities.AddAsync(user);
             if (await _context.SaveChangesAsync() > 0)
             {
-                return userLogin;
+                user.StaffLoginEntityId = userLogin.StaffLoginId;
             }
+
+            if (await _context.SaveChangesAsync() > 0)
+                return userLogin;
 
             return null;
         }
 
         public async Task<bool> UserExists(string username)
         {
-            if (await _context.UserLoginEntities.AnyAsync(x => x.Username.ToLower() == username.ToLower()))
+            if (await _context.StaffEntities.AnyAsync(x => x.Username.ToLower() == username.ToLower()))
                 return true;
 
             return false;
         }
 
-        public async Task<UserEntity> GetUserDetailsWithUserLoginId(int id)
+        public async Task<StaffEntity> GetUserDetailsWithUserLoginId(int id)
         {
-            var userDetails = await _context.UserEntities.FirstOrDefaultAsync(x => x.UserLoginEntityId == id);
+            var userDetails = await _context.StaffEntities.FirstOrDefaultAsync(x => x.StaffLoginEntityId == id);
 
             return userDetails;
         }

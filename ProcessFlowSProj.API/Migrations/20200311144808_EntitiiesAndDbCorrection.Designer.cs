@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ProcessFlowSProj.API.Data;
 
 namespace ProcessFlowSProj.API.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20200311144808_EntitiiesAndDbCorrection")]
+    partial class EntitiiesAndDbCorrection
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -55,29 +57,6 @@ namespace ProcessFlowSProj.API.Migrations
                     b.ToTable("ApprovalStatusEntities");
                 });
 
-            modelBuilder.Entity("ProcessFlowSProj.API.Entities.ImagesEntity", b =>
-                {
-                    b.Property<int>("ImageId")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("DateTimeAdded");
-
-                    b.Property<string>("Description");
-
-                    b.Property<int>("ProjectId");
-
-                    b.Property<string>("PublicId");
-
-                    b.Property<string>("Url");
-
-                    b.HasKey("ImageId");
-
-                    b.HasIndex("ProjectId");
-
-                    b.ToTable("ImagesEntities");
-                });
-
             modelBuilder.Entity("ProcessFlowSProj.API.Entities.OperationEntity", b =>
                 {
                     b.Property<int>("OperationId")
@@ -91,61 +70,6 @@ namespace ProcessFlowSProj.API.Migrations
                     b.HasKey("OperationId");
 
                     b.ToTable("OperationEntities");
-                });
-
-            modelBuilder.Entity("ProcessFlowSProj.API.Entities.ProjectEntity", b =>
-                {
-                    b.Property<int>("ProjectId")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<decimal?>("ApprovedAmount");
-
-                    b.Property<string>("CompanyEmail")
-                        .IsRequired();
-
-                    b.Property<string>("CompanyName")
-                        .IsRequired();
-
-                    b.Property<string>("ContactAddress")
-                        .IsRequired();
-
-                    b.Property<string>("ContactNumber")
-                        .IsRequired();
-
-                    b.Property<string>("ContactPerson")
-                        .IsRequired();
-
-                    b.Property<int>("CreatedBy");
-
-                    b.Property<DateTime>("DateTimeCreated");
-
-                    b.Property<DateTime?>("DateTimeDeleted");
-
-                    b.Property<DateTime?>("DateTimeModified");
-
-                    b.Property<int?>("DeletedBy");
-
-                    b.Property<string>("Description")
-                        .IsRequired();
-
-                    b.Property<int>("DurationInMonths");
-
-                    b.Property<bool>("IsDeleted");
-
-                    b.Property<int?>("LastModifiedBy");
-
-                    b.Property<string>("Location")
-                        .IsRequired();
-
-                    b.Property<string>("ProjectTitle")
-                        .IsRequired();
-
-                    b.Property<decimal>("ProposedAmount");
-
-                    b.HasKey("ProjectId");
-
-                    b.ToTable("ProjectEntities");
                 });
 
             modelBuilder.Entity("ProcessFlowSProj.API.Entities.StaffEntity", b =>
@@ -245,11 +169,9 @@ namespace ProcessFlowSProj.API.Migrations
 
                     b.Property<string>("Comment");
 
-                    b.Property<DateTime>("DateTimeApproved");
-
                     b.Property<int?>("FromLevelId");
 
-                    b.Property<int?>("FromStaffId");
+                    b.Property<int>("FromStaffId");
 
                     b.Property<int>("OperationId");
 
@@ -280,14 +202,6 @@ namespace ProcessFlowSProj.API.Migrations
                     b.HasOne("ProcessFlowSProj.API.Entities.StaffRoleEntity", "StaffRoleEntity")
                         .WithMany()
                         .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("ProcessFlowSProj.API.Entities.ImagesEntity", b =>
-                {
-                    b.HasOne("ProcessFlowSProj.API.Entities.ProjectEntity", "ProjectEntity")
-                        .WithMany("ImagesEntities")
-                        .HasForeignKey("ProjectId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

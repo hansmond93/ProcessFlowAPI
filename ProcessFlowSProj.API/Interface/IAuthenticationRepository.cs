@@ -8,9 +8,9 @@ namespace ProcessFlowSProj.API.Interface
 {
     public interface IAuthenticationRepository
     {
-        Task<UserLoginEntity> Register(UserEntity user, string password);
-        Task<UserLoginEntity> Login(string username, string password);
+        Task<StaffLoginEntity> Register(StaffEntity user, string password);
+        Task<StaffLoginEntity> Login(string username, string password);
         Task<bool> UserExists(string username);
-        Task<UserEntity> GetUserDetailsWithUserLoginId(int id);
+        Task<StaffEntity> GetUserDetailsWithUserLoginId(int id);
     }
 }
