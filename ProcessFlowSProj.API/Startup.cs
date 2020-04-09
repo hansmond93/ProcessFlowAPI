@@ -22,6 +22,8 @@ using ProcessFlowSProj.API.Helpers;
 using ProcessFlowSProj.API.Interface;
 using ProcessFlowSProj.API.Repository;
 using ProcessFlowSProj.API.Services.Extensions;
+using Services.Configuration;
+using Services.EmailService;
 
 namespace ProcessFlowSProj.API
 {
@@ -57,6 +59,11 @@ namespace ProcessFlowSProj.API
                         };
 
                     });
+
+            services.Configure<EmailConfig>(options =>
+                Configuration.GetSection(nameof(EmailConfig)).Bind(options));
+
+            services.AddTransient<IEmailService, EmailService>();
             services.AddScoped<IAuthenticationRepository, AuthenticationRepository>();
             services.AddScoped<IWorkFlow, WorkFlow>();
             services.AddScoped<IProjectRepository, ProjectRepository>();

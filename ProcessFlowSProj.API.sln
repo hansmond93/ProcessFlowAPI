@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.902
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29905.134
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProcessFlowSProj.API", "ProcessFlowSProj.API\ProcessFlowSProj.API.csproj", "{9BB38E5C-F2BB-40EA-B8E4-5134DEF39409}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProcessFlowSProj.API", "ProcessFlowSProj.API\ProcessFlowSProj.API.csproj", "{9BB38E5C-F2BB-40EA-B8E4-5134DEF39409}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Services", "Services\Services.csproj", "{A27698EB-534A-4254-BC77-9A065F3C5229}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{9BB38E5C-F2BB-40EA-B8E4-5134DEF39409}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9BB38E5C-F2BB-40EA-B8E4-5134DEF39409}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9BB38E5C-F2BB-40EA-B8E4-5134DEF39409}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A27698EB-534A-4254-BC77-9A065F3C5229}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A27698EB-534A-4254-BC77-9A065F3C5229}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A27698EB-534A-4254-BC77-9A065F3C5229}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A27698EB-534A-4254-BC77-9A065F3C5229}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

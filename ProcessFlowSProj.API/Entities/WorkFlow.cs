@@ -4,6 +4,7 @@ using ProcessFlowSProj.API.Data;
 using ProcessFlowSProj.API.Dtos;
 using ProcessFlowSProj.API.Helpers.Timing;
 using ProcessFlowSProj.API.Interface;
+using Services.EmailService;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,10 +15,12 @@ namespace ProcessFlowSProj.API.Entities
     public class WorkFlow : IWorkFlow
     {
         private readonly DataContext _dataContext;
+        private readonly IEmailService _emailService;
 
-        public WorkFlow(DataContext dataContext)
+        public WorkFlow(DataContext dataContext, IEmailService emailService)
         {
             _dataContext = dataContext ?? throw new ArgumentException("Dependency Injection Failed");
+            _emailService = emailService ?? throw new ArgumentException("Dependency Injection Failed");
         }
 
         private int _operationId;
@@ -151,15 +154,17 @@ namespace ProcessFlowSProj.API.Entities
 
             //return response;
 
-            var staff = _dataContext.StaffEntities.Where(x => x.StaffId == toStaffId).SingleOrDefault();
+            var toStaff = _dataContext.StaffEntities.Where(x => x.StaffId == toStaffId).SingleOrDefault();
+            var fromStaff = _dataContext.StaffEntities.Where(x => x.StaffId == fromStaffId).SingleOrDefault();
 
 
             _nextLevelRoleId = level.RoleId;
             _nextLevelRoleName = _dataContext.StaffRoleEntities.SingleOrDefault(x => x.RoleId == level.RoleId).RoleName;
-            _nextLevelFirstname = staff.FirstName;
-            _nextLevelLastname = staff.LastName;
-            _nextLevelMiddlename = staff.MiddleName ?? "";
-
+            _nextLevelFirstname = toStaff.FirstName;
+            _nextLevelLastname = toStaff.LastName;
+            _nextLevelMiddlename = toStaff.MiddleName ?? "";
+            _emailService.SendEmail(fromStaff.EmailAddress, "Approval Notification", $"Dear {fromStaff.FirstName}\n Your request has been successfully sent to {toStaff.FirstName} {toStaff.LastName} for approval. ");
+            _emailService.SendEmail(toStaff.EmailAddress, "Approval Notification", $"Dear {toStaff.FirstName}\n Your have an Approval Request from {fromStaff.FirstName} {fromStaff.LastName}, please kindly review. ");
 
 
         }

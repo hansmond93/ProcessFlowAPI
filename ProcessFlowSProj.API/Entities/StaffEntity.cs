@@ -39,5 +39,10 @@ namespace ProcessFlowSProj.API.Entities
 
         public string StaffCode { get; set; }
 
+        [EmailAddress]
+        public string EmailAddress { get; set; }
+
+
+
     }
 }
