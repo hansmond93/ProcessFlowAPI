@@ -166,8 +166,8 @@ namespace ProcessFlowSProj.API.Repository
                                               Comment = wte.Comment,
                                               FromStaffId = wte.FromStaffId.Value,
                                               RequestStaffId = wte.RequestStaffId,
-                                              RequestStaffName = _context.StaffEntities.Where(s => s.StaffId == wte.RequestStaffId).Select(x => x.FirstName + " " + x.LastName).FirstOrDefault(),
-                                              FromStaffName = _context.StaffEntities.Where(s => s.StaffId == wte.FromStaffId.Value).Select(x => x.FirstName + " " + x.LastName).FirstOrDefault(),
+                                              RequestStaffName = _context.StaffEntities.Where(s => s.Id == wte.RequestStaffId).Select(x => x.FirstName + " " + x.LastName).FirstOrDefault(),
+                                              FromStaffName = _context.StaffEntities.Where(s => s.Id == wte.FromStaffId.Value).Select(x => x.FirstName + " " + x.LastName).FirstOrDefault(),
                                               DateApprovedByPreviousLevel = wte.DateTimeApproved
 
 

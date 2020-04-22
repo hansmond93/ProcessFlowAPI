@@ -22,6 +22,8 @@ namespace ProcessFlowSProj.API.Helpers
                     option.Ignore();
                 });
             CreateMap<ApprovalLevelEntity, GetDetailedApprovalLevelDto>();
+            CreateMap<StaffEntity, CreatedStaffForReturnDto>();
+
 
 
         }

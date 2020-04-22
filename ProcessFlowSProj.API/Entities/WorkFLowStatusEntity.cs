@@ -14,11 +14,13 @@ namespace ProcessFlowSProj.API.Entities
         [Required]
         public string StatusName { get; set; }
 
-        public static readonly byte Initiation = 0;
+        public WorkFlowTrailEntity WorkFlowTrailEntity { get; set; }
 
-        public static readonly byte Ongoing = 1;
+        public static readonly int Initiation = 0;
 
-        public static readonly byte Completed = 2;
+        public static readonly int Ongoing = 1;
+
+        public static readonly int Completed = 2;
 
 
     }

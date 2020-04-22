@@ -15,7 +15,7 @@ namespace ProcessFlowSProj.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class ProjectController : ControllerBase
     {
         private readonly IWorkFlow _workFlow;
@@ -28,6 +28,13 @@ namespace ProcessFlowSProj.API.Controllers
             _projectRepo = projectRepo;
             _token = token;
         }
+
+        [HttpGet("testGet")]
+        public ActionResult<IEnumerable<string>> Get()
+        {
+            return new string[] { "value1", "value2" };
+        }
+
 
         //api/test/goforapproval
         [HttpPost("saveProject")]

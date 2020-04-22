@@ -14,7 +14,9 @@ namespace ProcessFlowSProj.API.Entities
         public string OperationName { get; set; }
 
         public string OperationCode { get; set; }
-        
+
+        public WorkFlowTrailEntity WorkFlowTrailEntity { get; set; }
+
 
     }
 }

@@ -11,12 +11,13 @@ namespace ProcessFlowSProj.API.Entities
         [Key]
         public int ApprovalStatusId { get; set; }
         public string ApprovalStatusName { get; set; }
+        public WorkFlowTrailEntity WorkFlowTrailEntity { get; set; }
 
-        public static readonly byte Pending = 0;
-        public static readonly byte Procesing = 1;
-        public static readonly byte Approved = 2;
-        public static readonly byte Rejected = 3;
-        public static readonly byte Referred = 4;
+        public static readonly int Pending = 0;
+        public static readonly int Procesing = 1;
+        public static readonly int Approved = 2;
+        public static readonly int Rejected = 3;
+        public static readonly int Referred = 4;
         
     }
 }

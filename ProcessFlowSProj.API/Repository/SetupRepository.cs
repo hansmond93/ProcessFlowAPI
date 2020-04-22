@@ -199,7 +199,7 @@ namespace ProcessFlowSProj.API.Repository
 
         public async Task<bool> CheckIfRoleExists(int roleId)
         {
-            var result = await _context.StaffRoleEntities.AnyAsync(r => r.RoleId == roleId);
+            var result = await _context.StaffRoleEntities.AnyAsync(r => r.Id == roleId);
 
             return result;
         }

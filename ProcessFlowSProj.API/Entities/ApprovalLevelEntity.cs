@@ -14,13 +14,17 @@ namespace ProcessFlowSProj.API.Entities
 
         [ForeignKey("OperationEntity")]
         public int OperationId { get; set; }
+        public OperationEntity OperationEntity { get; set; }
+
 
         [ForeignKey("StaffRoleEntity")]
         public int RoleId { get; set; }
-
         public StaffRoleEntity StaffRoleEntity { get; set; }
 
-        public OperationEntity OperationEntity { get; set; }
+
+
+        public WorkFlowTrailEntity WorkFlowTrailEntityToLevel { get; set; }
+        public WorkFlowTrailEntity WorkFlowTrailEntityFromLevel { get; set; }
 
         public int Position { get; set; }
 
