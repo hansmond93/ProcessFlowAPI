@@ -9,7 +9,7 @@ namespace ProcessFlowSProj.API.Dtos
     {
         public int ApprovalLevelId { get; set; }
         public int OperationId { get; set; }
-        public int RoleId { get; set; }
+        public int RoleEntityId { get; set; }
         public int Position { get; set; }
         public bool Active { get; set; }
     }

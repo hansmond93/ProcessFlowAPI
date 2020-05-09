@@ -9,9 +9,7 @@ namespace ProcessFlowSProj.API.Dtos
     {
         public int Id { get; set; }
 
-        public int? StaffLoginEntityId { get; set; }
-
-        public int RoleId { get; set; }
+        public int RoleEntityId { get; set; }
 
         public string FirstName { get; set; }
 

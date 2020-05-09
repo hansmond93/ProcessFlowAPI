@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace ProcessFlowSProj.API.Migrations
 {
-    public partial class Identity : Migration
+    public partial class AddedIdentity : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -19,6 +19,21 @@ namespace ProcessFlowSProj.API.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ApprovalStatusEntities", x => x.ApprovalStatusId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AspNetRoles",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Name = table.Column<string>(maxLength: 256, nullable: true),
+                    NormalizedName = table.Column<string>(maxLength: 256, nullable: true),
+                    ConcurrencyStamp = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetRoles", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -66,20 +81,17 @@ namespace ProcessFlowSProj.API.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "StaffRoleEntity",
+                name: "RoleEntity",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(maxLength: 256, nullable: true),
-                    NormalizedName = table.Column<string>(maxLength: 256, nullable: true),
-                    ConcurrencyStamp = table.Column<string>(nullable: true),
                     RoleName = table.Column<string>(nullable: true),
                     RoleCode = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_StaffRoleEntity", x => x.Id);
+                    table.PrimaryKey("PK_RoleEntity", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -93,6 +105,27 @@ namespace ProcessFlowSProj.API.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_WorkFLowStatusEntity", x => x.StatusId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AspNetRoleClaims",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    RoleId = table.Column<int>(nullable: false),
+                    ClaimType = table.Column<string>(nullable: true),
+                    ClaimValue = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetRoleClaims", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AspNetRoleClaims_AspNetRoles_RoleId",
+                        column: x => x.RoleId,
+                        principalTable: "AspNetRoles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -125,7 +158,7 @@ namespace ProcessFlowSProj.API.Migrations
                     ApprovalLevelId = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     OperationId = table.Column<int>(nullable: false),
-                    RoleId = table.Column<int>(nullable: false),
+                    RoleEntityId = table.Column<int>(nullable: false),
                     Position = table.Column<int>(nullable: false),
                     Active = table.Column<bool>(nullable: false)
                 },
@@ -139,30 +172,132 @@ namespace ProcessFlowSProj.API.Migrations
                         principalColumn: "OperationId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_ApprovalLevelEntities_StaffRoleEntity_RoleId",
-                        column: x => x.RoleId,
-                        principalTable: "StaffRoleEntity",
+                        name: "FK_ApprovalLevelEntities_RoleEntity_RoleEntityId",
+                        column: x => x.RoleEntityId,
+                        principalTable: "RoleEntity",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "AspNetRoleClaims",
+                name: "StaffEntity",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    RoleId = table.Column<int>(nullable: false),
+                    UserName = table.Column<string>(maxLength: 256, nullable: false),
+                    NormalizedUserName = table.Column<string>(maxLength: 256, nullable: true),
+                    NormalizedEmail = table.Column<string>(maxLength: 256, nullable: true),
+                    EmailConfirmed = table.Column<bool>(nullable: false),
+                    PasswordHash = table.Column<string>(nullable: true),
+                    SecurityStamp = table.Column<string>(nullable: true),
+                    ConcurrencyStamp = table.Column<string>(nullable: true),
+                    PhoneNumber = table.Column<string>(nullable: true),
+                    PhoneNumberConfirmed = table.Column<bool>(nullable: false),
+                    TwoFactorEnabled = table.Column<bool>(nullable: false),
+                    LockoutEnd = table.Column<DateTimeOffset>(nullable: true),
+                    LockoutEnabled = table.Column<bool>(nullable: false),
+                    AccessFailedCount = table.Column<int>(nullable: false),
+                    RoleEntityId = table.Column<int>(nullable: false),
+                    FirstName = table.Column<string>(nullable: false),
+                    LastName = table.Column<string>(nullable: false),
+                    MiddleName = table.Column<string>(nullable: true),
+                    Gender = table.Column<string>(nullable: false),
+                    StaffCode = table.Column<string>(nullable: true),
+                    Email = table.Column<string>(maxLength: 256, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_StaffEntity", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_StaffEntity_RoleEntity_RoleEntityId",
+                        column: x => x.RoleEntityId,
+                        principalTable: "RoleEntity",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AspNetUserClaims",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    UserId = table.Column<int>(nullable: false),
                     ClaimType = table.Column<string>(nullable: true),
                     ClaimValue = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AspNetRoleClaims", x => x.Id);
+                    table.PrimaryKey("PK_AspNetUserClaims", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_AspNetRoleClaims_StaffRoleEntity_RoleId",
+                        name: "FK_AspNetUserClaims_StaffEntity_UserId",
+                        column: x => x.UserId,
+                        principalTable: "StaffEntity",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AspNetUserLogins",
+                columns: table => new
+                {
+                    LoginProvider = table.Column<string>(nullable: false),
+                    ProviderKey = table.Column<string>(nullable: false),
+                    ProviderDisplayName = table.Column<string>(nullable: true),
+                    UserId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetUserLogins", x => new { x.LoginProvider, x.ProviderKey });
+                    table.ForeignKey(
+                        name: "FK_AspNetUserLogins_StaffEntity_UserId",
+                        column: x => x.UserId,
+                        principalTable: "StaffEntity",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AspNetUserRoles",
+                columns: table => new
+                {
+                    UserId = table.Column<int>(nullable: false),
+                    RoleId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetUserRoles", x => new { x.UserId, x.RoleId });
+                    table.ForeignKey(
+                        name: "FK_AspNetUserRoles_AspNetRoles_RoleId",
                         column: x => x.RoleId,
-                        principalTable: "StaffRoleEntity",
+                        principalTable: "AspNetRoles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_AspNetUserRoles_StaffEntity_UserId",
+                        column: x => x.UserId,
+                        principalTable: "StaffEntity",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AspNetUserTokens",
+                columns: table => new
+                {
+                    UserId = table.Column<int>(nullable: false),
+                    LoginProvider = table.Column<string>(nullable: false),
+                    Name = table.Column<string>(nullable: false),
+                    Value = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetUserTokens", x => new { x.UserId, x.LoginProvider, x.Name });
+                    table.ForeignKey(
+                        name: "FK_AspNetUserTokens_StaffEntity_UserId",
+                        column: x => x.UserId,
+                        principalTable: "StaffEntity",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -196,16 +331,34 @@ namespace ProcessFlowSProj.API.Migrations
                         principalColumn: "ApprovalStatusId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
+                        name: "FK_WorkFlowTrailEntity_StaffEntity_ApprovedByStaffId",
+                        column: x => x.ApprovedByStaffId,
+                        principalTable: "StaffEntity",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
                         name: "FK_WorkFlowTrailEntity_ApprovalLevelEntities_FromLevelId",
                         column: x => x.FromLevelId,
                         principalTable: "ApprovalLevelEntities",
                         principalColumn: "ApprovalLevelId",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
+                        name: "FK_WorkFlowTrailEntity_StaffEntity_FromStaffId",
+                        column: x => x.FromStaffId,
+                        principalTable: "StaffEntity",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
                         name: "FK_WorkFlowTrailEntity_OperationEntities_OperationId",
                         column: x => x.OperationId,
                         principalTable: "OperationEntities",
                         principalColumn: "OperationId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_WorkFlowTrailEntity_StaffEntity_RequestStaffId",
+                        column: x => x.RequestStaffId,
+                        principalTable: "StaffEntity",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_WorkFlowTrailEntity_WorkFLowStatusEntity_StatusId",
@@ -219,126 +372,11 @@ namespace ProcessFlowSProj.API.Migrations
                         principalTable: "ApprovalLevelEntities",
                         principalColumn: "ApprovalLevelId",
                         onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "AspNetUserClaims",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    UserId = table.Column<int>(nullable: false),
-                    ClaimType = table.Column<string>(nullable: true),
-                    ClaimValue = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AspNetUserClaims", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "AspNetUserLogins",
-                columns: table => new
-                {
-                    LoginProvider = table.Column<string>(nullable: false),
-                    ProviderKey = table.Column<string>(nullable: false),
-                    ProviderDisplayName = table.Column<string>(nullable: true),
-                    UserId = table.Column<int>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AspNetUserLogins", x => new { x.LoginProvider, x.ProviderKey });
-                });
-
-            migrationBuilder.CreateTable(
-                name: "AspNetUserRoles",
-                columns: table => new
-                {
-                    UserId = table.Column<int>(nullable: false),
-                    RoleId = table.Column<int>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AspNetUserRoles", x => new { x.UserId, x.RoleId });
                     table.ForeignKey(
-                        name: "FK_AspNetUserRoles_StaffRoleEntity_RoleId",
-                        column: x => x.RoleId,
-                        principalTable: "StaffRoleEntity",
+                        name: "FK_WorkFlowTrailEntity_StaffEntity_ToStaffId",
+                        column: x => x.ToStaffId,
+                        principalTable: "StaffEntity",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "AspNetUserTokens",
-                columns: table => new
-                {
-                    UserId = table.Column<int>(nullable: false),
-                    LoginProvider = table.Column<string>(nullable: false),
-                    Name = table.Column<string>(nullable: false),
-                    Value = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AspNetUserTokens", x => new { x.UserId, x.LoginProvider, x.Name });
-                });
-
-            migrationBuilder.CreateTable(
-                name: "StaffLoginEntities",
-                columns: table => new
-                {
-                    StaffLoginId = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    PasswordHash = table.Column<byte[]>(nullable: false),
-                    PasswordSalt = table.Column<byte[]>(nullable: false),
-                    StaffId = table.Column<int>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_StaffLoginEntities", x => x.StaffLoginId);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "StaffEntity",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    UserName = table.Column<string>(maxLength: 256, nullable: false),
-                    NormalizedUserName = table.Column<string>(maxLength: 256, nullable: true),
-                    NormalizedEmail = table.Column<string>(maxLength: 256, nullable: true),
-                    EmailConfirmed = table.Column<bool>(nullable: false),
-                    PasswordHash = table.Column<string>(nullable: true),
-                    SecurityStamp = table.Column<string>(nullable: true),
-                    ConcurrencyStamp = table.Column<string>(nullable: true),
-                    PhoneNumber = table.Column<string>(nullable: true),
-                    PhoneNumberConfirmed = table.Column<bool>(nullable: false),
-                    TwoFactorEnabled = table.Column<bool>(nullable: false),
-                    LockoutEnd = table.Column<DateTimeOffset>(nullable: true),
-                    LockoutEnabled = table.Column<bool>(nullable: false),
-                    AccessFailedCount = table.Column<int>(nullable: false),
-                    StaffLoginEntityId = table.Column<int>(nullable: true),
-                    RoleId = table.Column<int>(nullable: false),
-                    FirstName = table.Column<string>(nullable: false),
-                    LastName = table.Column<string>(nullable: false),
-                    MiddleName = table.Column<string>(nullable: true),
-                    Gender = table.Column<string>(nullable: false),
-                    StaffCode = table.Column<string>(nullable: true),
-                    Email = table.Column<string>(maxLength: 256, nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_StaffEntity", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_StaffEntity_StaffRoleEntity_RoleId",
-                        column: x => x.RoleId,
-                        principalTable: "StaffRoleEntity",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_StaffEntity_StaffLoginEntities_StaffLoginEntityId",
-                        column: x => x.StaffLoginEntityId,
-                        principalTable: "StaffLoginEntities",
-                        principalColumn: "StaffLoginId",
                         onDelete: ReferentialAction.Restrict);
                 });
 
@@ -348,14 +386,21 @@ namespace ProcessFlowSProj.API.Migrations
                 column: "OperationId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ApprovalLevelEntities_RoleId",
+                name: "IX_ApprovalLevelEntities_RoleEntityId",
                 table: "ApprovalLevelEntities",
-                column: "RoleId");
+                column: "RoleEntityId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
                 column: "RoleId");
+
+            migrationBuilder.CreateIndex(
+                name: "RoleNameIndex",
+                table: "AspNetRoles",
+                column: "NormalizedName",
+                unique: true,
+                filter: "[NormalizedName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetUserClaims_UserId",
@@ -390,27 +435,9 @@ namespace ProcessFlowSProj.API.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_StaffEntity_RoleId",
+                name: "IX_StaffEntity_RoleEntityId",
                 table: "StaffEntity",
-                column: "RoleId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_StaffEntity_StaffLoginEntityId",
-                table: "StaffEntity",
-                column: "StaffLoginEntityId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_StaffLoginEntities_StaffId",
-                table: "StaffLoginEntities",
-                column: "StaffId",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "RoleNameIndex",
-                table: "StaffRoleEntity",
-                column: "NormalizedName",
-                unique: true,
-                filter: "[NormalizedName] IS NOT NULL");
+                column: "RoleEntityId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_WorkFlowTrailEntity_ApprovalStatusId",
@@ -470,90 +497,10 @@ namespace ProcessFlowSProj.API.Migrations
                 column: "ToStaffId",
                 unique: true,
                 filter: "[ToStaffId] IS NOT NULL");
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_WorkFlowTrailEntity_StaffEntity_ApprovedByStaffId",
-                table: "WorkFlowTrailEntity",
-                column: "ApprovedByStaffId",
-                principalTable: "StaffEntity",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Restrict);
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_WorkFlowTrailEntity_StaffEntity_FromStaffId",
-                table: "WorkFlowTrailEntity",
-                column: "FromStaffId",
-                principalTable: "StaffEntity",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Restrict);
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_WorkFlowTrailEntity_StaffEntity_RequestStaffId",
-                table: "WorkFlowTrailEntity",
-                column: "RequestStaffId",
-                principalTable: "StaffEntity",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_WorkFlowTrailEntity_StaffEntity_ToStaffId",
-                table: "WorkFlowTrailEntity",
-                column: "ToStaffId",
-                principalTable: "StaffEntity",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Restrict);
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_AspNetUserClaims_StaffEntity_UserId",
-                table: "AspNetUserClaims",
-                column: "UserId",
-                principalTable: "StaffEntity",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_AspNetUserLogins_StaffEntity_UserId",
-                table: "AspNetUserLogins",
-                column: "UserId",
-                principalTable: "StaffEntity",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_AspNetUserRoles_StaffEntity_UserId",
-                table: "AspNetUserRoles",
-                column: "UserId",
-                principalTable: "StaffEntity",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_AspNetUserTokens_StaffEntity_UserId",
-                table: "AspNetUserTokens",
-                column: "UserId",
-                principalTable: "StaffEntity",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_StaffLoginEntities_StaffEntity_StaffId",
-                table: "StaffLoginEntities",
-                column: "StaffId",
-                principalTable: "StaffEntity",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_StaffEntity_StaffRoleEntity_RoleId",
-                table: "StaffEntity");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_StaffLoginEntities_StaffEntity_StaffId",
-                table: "StaffLoginEntities");
-
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
 
@@ -576,10 +523,16 @@ namespace ProcessFlowSProj.API.Migrations
                 name: "WorkFlowTrailEntity");
 
             migrationBuilder.DropTable(
+                name: "AspNetRoles");
+
+            migrationBuilder.DropTable(
                 name: "ProjectEntities");
 
             migrationBuilder.DropTable(
                 name: "ApprovalStatusEntities");
+
+            migrationBuilder.DropTable(
+                name: "StaffEntity");
 
             migrationBuilder.DropTable(
                 name: "ApprovalLevelEntities");
@@ -591,13 +544,7 @@ namespace ProcessFlowSProj.API.Migrations
                 name: "OperationEntities");
 
             migrationBuilder.DropTable(
-                name: "StaffRoleEntity");
-
-            migrationBuilder.DropTable(
-                name: "StaffEntity");
-
-            migrationBuilder.DropTable(
-                name: "StaffLoginEntities");
+                name: "RoleEntity");
         }
     }
 }

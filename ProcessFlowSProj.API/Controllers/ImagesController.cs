@@ -11,7 +11,6 @@ namespace ProcessFlowSProj.API.Controllers
 {
     [Route("api/image")]
     [ApiController]
-    [Authorize]
     public class ImagesController : ControllerBase
     {
         private readonly IImagesRepository _imageRepository;

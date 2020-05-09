@@ -37,7 +37,7 @@ namespace ProcessFlowSProj.API.Repository
                 levelToAdd.OperationId = addLevel.OperationId;
                 levelToAdd.Position = addLevel.Position != 1 ? 1 : addLevel.Position;   //Default Position because setup doesnot exist
                 levelToAdd.Active = addLevel.Active;
-                levelToAdd.RoleId = addLevel.RoleId;
+                levelToAdd.RoleEntityId = addLevel.RoleId;
 
                 await _context.ApprovalLevelEntities.AddAsync(levelToAdd);
                 await _context.SaveChangesAsync();
@@ -51,7 +51,7 @@ namespace ProcessFlowSProj.API.Repository
                 levelToAdd.OperationId = addLevel.OperationId;
                 levelToAdd.Position = addLevel.Position;
                 levelToAdd.Active = addLevel.Active;
-                levelToAdd.RoleId = addLevel.RoleId;
+                levelToAdd.RoleEntityId = addLevel.RoleId;
 
                 await _context.ApprovalLevelEntities.AddAsync(levelToAdd);
                 await _context.SaveChangesAsync();
@@ -69,7 +69,7 @@ namespace ProcessFlowSProj.API.Repository
                     levelToAdd.OperationId = addLevel.OperationId;
                     levelToAdd.Position = addLevel.Position;
                     levelToAdd.Active = addLevel.Active;
-                    levelToAdd.RoleId = addLevel.RoleId;
+                    levelToAdd.RoleEntityId = addLevel.RoleId;
 
                     while (i >= 0)
                     {
@@ -199,7 +199,7 @@ namespace ProcessFlowSProj.API.Repository
 
         public async Task<bool> CheckIfRoleExists(int roleId)
         {
-            var result = await _context.StaffRoleEntities.AnyAsync(r => r.Id == roleId);
+            var result = await _context.RoleEntities.AnyAsync(r => r.Id == roleId);
 
             return result;
         }

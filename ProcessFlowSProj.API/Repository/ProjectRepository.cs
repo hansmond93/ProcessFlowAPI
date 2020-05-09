@@ -41,6 +41,16 @@ namespace ProcessFlowSProj.API.Repository
             return projectsToReturn;
         }
 
+        public async Task<IEnumerable<GetProjectDto>> GetALlProjectByStaffId(int staffId)
+        {
+            //test staffId in controller to see if it matches the token staffId
+            var projects = await _context.ProjectEntities.Where(x => x.IsDeleted != true && x.CreatedBy == staffId).ToListAsync();
+
+            var projectsToReturn = _mapper.Map<IEnumerable<GetProjectDto>>(projects);
+
+            return projectsToReturn;
+        }
+
         public async Task<GetProjectDto> GetProjectById(int projectId)
         {
             var project =  await _context.ProjectEntities.Where(x => x.IsDeleted != true && x.ProjectId == projectId).SingleOrDefaultAsync();
@@ -55,7 +65,7 @@ namespace ProcessFlowSProj.API.Repository
             var projectToBeCreated = _mapper.Map<ProjectEntity>(project);
 
             projectToBeCreated.DateTimeCreated = Clock.Now;
-            projectToBeCreated.CreatedBy = 4;   //Get this staffId from httpContext__checkTimeTracker
+            projectToBeCreated.CreatedBy = _tokenHelper.GetStaffId();   //Get this staffId from httpContext__checkTimeTracker
             projectToBeCreated.IsDeleted = false;
 
             await _context.ProjectEntities.AddAsync(projectToBeCreated);

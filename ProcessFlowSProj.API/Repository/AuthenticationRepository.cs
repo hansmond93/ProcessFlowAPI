@@ -23,106 +23,103 @@ namespace ProcessFlowSProj.API.Repository
         private readonly UserManager<StaffEntity> _userManager;
         private readonly IMapper _mapper;
         private readonly IConfiguration _config;
+        private readonly RoleManager<Role> _roleManager;
+        private readonly SignInManager<StaffEntity> _signInManager;
 
-        public AuthenticationRepository(DataContext context, UserManager<StaffEntity> userManager, IMapper mapper, IConfiguration config)
+        public AuthenticationRepository(DataContext context, UserManager<StaffEntity> userManager, RoleManager<Role> roleManager, 
+            SignInManager<StaffEntity> signInManager, IMapper mapper, IConfiguration config)
         {
             _context = context;
             _userManager = userManager;
             _mapper = mapper;
             _config = config;
+            _roleManager = roleManager;
+            _signInManager = signInManager;
         }
-        public async Task<StaffLoginEntity> Login(string username, string password)
-        {
-            var user = await _context.StaffLoginEntities.FirstOrDefaultAsync(x => x.StaffEntity.UserName.ToLower() == username.ToLower());
+       
+        //public async Task<CreatedStaffForReturnDto> Register(StaffEntity user, string password)
+        //{
+        //    //I might have to use a roll back method incase all after creating a user, a logIn entity is unable to be created
+        //    CreatePasswordHash(password, out byte[] passwordHash, out byte[] passwordSalt); //this syntax automatically defines the passworldSalt and passwordHash so they ara available in this method
 
-            if (user == null)
-                return null;
+        //    var result = await _userManager.CreateAsync(user, password);
 
-            if (!VerifyPasswordHash(password, user.PasswordHash, user.PasswordSalt))
-                return null;
-            return user;
-        }
+        //    if (result.Succeeded)   //I have to roll back or check if the username exists and there's no login entity using Update method of userManager
+        //    {
+        //        var userLogin = new StaffLoginEntity
+        //        {
+        //            PasswordHash = passwordHash,
+        //            PasswordSalt = passwordSalt,
+        //            StaffId = user.Id           //check if this Id is populated
+        //        };
 
+        //        await _context.StaffLoginEntities.AddAsync(userLogin);
 
-        public async Task<CreatedStaffForReturnDto> Register(StaffEntity user, string password)
-        {
-            //I might have to use a roll back method incase all after creating a user, a logIn entity is unable to be created
-            CreatePasswordHash(password, out byte[] passwordHash, out byte[] passwordSalt); //this syntax automatically defines the passworldSalt and passwordHash so they ara available in this method
+        //        if (await _context.SaveChangesAsync() > 0)
+        //        {
+        //            user.StaffLoginEntityId = userLogin.StaffLoginId;
+        //        }
 
-            var result = await _userManager.CreateAsync(user, password);
+        //        if (await _context.SaveChangesAsync() > 0)
+        //        {
+        //            var staffToREturn = _mapper.Map<CreatedStaffForReturnDto>(user);
 
-            if (result.Succeeded)   //I have to roll back or check if the username exists and there's no login entity using Update method of userManager
-            {
-                var userLogin = new StaffLoginEntity
-                {
-                    PasswordHash = passwordHash,
-                    PasswordSalt = passwordSalt,
-                    StaffId = user.Id           //check if this Id is populated
-                };
-
-                await _context.StaffLoginEntities.AddAsync(userLogin);
-
-                if (await _context.SaveChangesAsync() > 0)
-                {
-                    user.StaffLoginEntityId = userLogin.StaffLoginId;
-                }
-
-                if (await _context.SaveChangesAsync() > 0)
-                {
-                    var staffToREturn = _mapper.Map<CreatedStaffForReturnDto>(user);
-
-                    return staffToREturn;
-                }
+        //            return staffToREturn;
+        //        }
                     
-            }
+        //    }
 
-            return null;
-        }
+        //    return null;
+        //}
 
-        public string GetToken(StaffEntity user)
+        public async Task<string> GetToken(StaffEntity user)
         {
-            var claims = new[]
-           {
+            var claims = new List<Claim>
+            {
 
                 new Claim("Username", user.UserName),
                 new Claim("StaffId", user.Id.ToString())
             };
 
+            var roles = await _userManager.GetRolesAsync(user);
+
+            foreach(var role in roles)
+            {
+                claims.Add(new Claim(ClaimTypes.Role, role));
+            }
+
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config.GetSection("AppSettings:Token").Value));
 
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
 
-            //var tokenDescriptor = new SecurityTokenDescriptor
-            //{
-            //    Subject = new ClaimsIdentity(claims),
-            //    Expires = DateTime.Now.AddDays(1),  //add this to aooSettings.json file
-            //    SigningCredentials = creds
-            //};
-
-            var tokenDescriptor = new JwtSecurityToken(
-                signingCredentials: creds,
-                claims: claims,
-                expires: DateTime.Now.AddDays(1));
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(claims),
+                Expires = DateTime.Now.AddDays(1),  //add this to aooSettings.json file
+                SigningCredentials = creds
+            };
 
             var tokenHandler = new JwtSecurityTokenHandler();
 
-            return tokenHandler.WriteToken(tokenDescriptor);
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+
+            return tokenHandler.WriteToken(token);
         }
 
-        public async Task<bool> UserExists(string username)
-        {
-            if (await _context.StaffEntities.AnyAsync(x => x.UserName.ToLower() == username.ToLower()))
-                return true;
+        //public async Task<bool> UserExists(string username)
+        //{
+        //    if (await _context.StaffEntities.AnyAsync(x => x.UserName.ToLower() == username.ToLower()))
+        //        return true;
 
-            return false;
-        }
+        //    return false;
+        //}
 
-        public async Task<StaffEntity> GetUserDetailsWithUserLoginId(int id)
-        {
-            var userDetails = await _context.StaffEntities.FirstOrDefaultAsync(x => x.StaffLoginEntityId == id);
+        //public async Task<StaffEntity> GetUserDetailsWithUserLoginId(int id)
+        //{
+        //    var userDetails = await _context.StaffEntities.FirstOrDefaultAsync(x => x.StaffLoginEntityId == id);
 
-            return userDetails;
-        }
+        //    return userDetails;
+        //}
 
 
 

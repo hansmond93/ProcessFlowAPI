@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 
 namespace ProcessFlowSProj.API.Entities
 {
-    public class StaffRoleEntity : IdentityRole<int>
+    public class RoleEntity 
     {
         [Key]
-        public override int Id { get; set; }
+        public int Id { get; set; }
         public string RoleName { get; set; }
         public string RoleCode { get; set; }
 

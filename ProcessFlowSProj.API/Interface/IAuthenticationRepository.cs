@@ -10,10 +10,10 @@ namespace ProcessFlowSProj.API.Interface
 {
     public interface IAuthenticationRepository
     {
-        Task<CreatedStaffForReturnDto> Register(StaffEntity user, string password);
-        Task<StaffLoginEntity> Login(string username, string password);
-        Task<bool> UserExists(string username);
-        Task<StaffEntity> GetUserDetailsWithUserLoginId(int id);
-        string GetToken(StaffEntity user);
+        //Task<CreatedStaffForReturnDto> Register(StaffEntity user, string password);
+        //Task<StaffLoginEntity> Login(string username, string password);
+        //Task<bool> UserExists(string username);
+        //Task<StaffEntity> GetUserDetailsWithUserLoginId(int id);
+        Task<string> GetToken(StaffEntity user);
     }
 }

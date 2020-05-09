@@ -10,8 +10,8 @@ using ProcessFlowSProj.API.Data;
 namespace ProcessFlowSProj.API.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20200420175649_Identity")]
-    partial class Identity
+    [Migration("20200509110307_Test Data Added")]
+    partial class TestDataAdded
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -76,19 +76,6 @@ namespace ProcessFlowSProj.API.Migrations
                     b.ToTable("AspNetUserLogins");
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<int>", b =>
-                {
-                    b.Property<int>("UserId");
-
-                    b.Property<int>("RoleId");
-
-                    b.HasKey("UserId", "RoleId");
-
-                    b.HasIndex("RoleId");
-
-                    b.ToTable("AspNetUserRoles");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<int>", b =>
                 {
                     b.Property<int>("UserId");
@@ -116,13 +103,13 @@ namespace ProcessFlowSProj.API.Migrations
 
                     b.Property<int>("Position");
 
-                    b.Property<int>("RoleId");
+                    b.Property<int>("RoleEntityId");
 
                     b.HasKey("ApprovalLevelId");
 
                     b.HasIndex("OperationId");
 
-                    b.HasIndex("RoleId");
+                    b.HasIndex("RoleEntityId");
 
                     b.ToTable("ApprovalLevelEntities");
                 });
@@ -233,6 +220,46 @@ namespace ProcessFlowSProj.API.Migrations
                     b.ToTable("ProjectEntities");
                 });
 
+            modelBuilder.Entity("ProcessFlowSProj.API.Entities.Role", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken();
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(256);
+
+                    b.Property<string>("NormalizedName")
+                        .HasMaxLength(256);
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedName")
+                        .IsUnique()
+                        .HasName("RoleNameIndex")
+                        .HasFilter("[NormalizedName] IS NOT NULL");
+
+                    b.ToTable("AspNetRoles");
+                });
+
+            modelBuilder.Entity("ProcessFlowSProj.API.Entities.RoleEntity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("RoleCode");
+
+                    b.Property<string>("RoleName");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("RoleEntity");
+                });
+
             modelBuilder.Entity("ProcessFlowSProj.API.Entities.StaffEntity", b =>
                 {
                     b.Property<int>("Id")
@@ -276,13 +303,11 @@ namespace ProcessFlowSProj.API.Migrations
 
                     b.Property<bool>("PhoneNumberConfirmed");
 
-                    b.Property<int>("RoleId");
+                    b.Property<int>("RoleEntityId");
 
                     b.Property<string>("SecurityStamp");
 
                     b.Property<string>("StaffCode");
-
-                    b.Property<int?>("StaffLoginEntityId");
 
                     b.Property<bool>("TwoFactorEnabled");
 
@@ -300,62 +325,22 @@ namespace ProcessFlowSProj.API.Migrations
                         .HasName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
-                    b.HasIndex("RoleId");
-
-                    b.HasIndex("StaffLoginEntityId");
+                    b.HasIndex("RoleEntityId");
 
                     b.ToTable("StaffEntity");
                 });
 
-            modelBuilder.Entity("ProcessFlowSProj.API.Entities.StaffLoginEntity", b =>
+            modelBuilder.Entity("ProcessFlowSProj.API.Entities.StaffUserRole", b =>
                 {
-                    b.Property<int>("StaffLoginId")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                    b.Property<int>("UserId");
 
-                    b.Property<byte[]>("PasswordHash")
-                        .IsRequired();
+                    b.Property<int>("RoleId");
 
-                    b.Property<byte[]>("PasswordSalt")
-                        .IsRequired();
+                    b.HasKey("UserId", "RoleId");
 
-                    b.Property<int>("StaffId");
+                    b.HasIndex("RoleId");
 
-                    b.HasKey("StaffLoginId");
-
-                    b.HasIndex("StaffId")
-                        .IsUnique();
-
-                    b.ToTable("StaffLoginEntities");
-                });
-
-            modelBuilder.Entity("ProcessFlowSProj.API.Entities.StaffRoleEntity", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("ConcurrencyStamp")
-                        .IsConcurrencyToken();
-
-                    b.Property<string>("Name")
-                        .HasMaxLength(256);
-
-                    b.Property<string>("NormalizedName")
-                        .HasMaxLength(256);
-
-                    b.Property<string>("RoleCode");
-
-                    b.Property<string>("RoleName");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("NormalizedName")
-                        .IsUnique()
-                        .HasName("RoleNameIndex")
-                        .HasFilter("[NormalizedName] IS NOT NULL");
-
-                    b.ToTable("StaffRoleEntity");
+                    b.ToTable("AspNetUserRoles");
                 });
 
             modelBuilder.Entity("ProcessFlowSProj.API.Entities.WorkFLowStatusEntity", b =>
@@ -441,7 +426,7 @@ namespace ProcessFlowSProj.API.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
                 {
-                    b.HasOne("ProcessFlowSProj.API.Entities.StaffRoleEntity")
+                    b.HasOne("ProcessFlowSProj.API.Entities.Role")
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade);
@@ -463,19 +448,6 @@ namespace ProcessFlowSProj.API.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<int>", b =>
-                {
-                    b.HasOne("ProcessFlowSProj.API.Entities.StaffRoleEntity")
-                        .WithMany()
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("ProcessFlowSProj.API.Entities.StaffEntity")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<int>", b =>
                 {
                     b.HasOne("ProcessFlowSProj.API.Entities.StaffEntity")
@@ -491,9 +463,9 @@ namespace ProcessFlowSProj.API.Migrations
                         .HasForeignKey("OperationId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("ProcessFlowSProj.API.Entities.StaffRoleEntity", "StaffRoleEntity")
+                    b.HasOne("ProcessFlowSProj.API.Entities.RoleEntity", "RoleEntity")
                         .WithMany()
-                        .HasForeignKey("RoleId")
+                        .HasForeignKey("RoleEntityId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
@@ -507,21 +479,22 @@ namespace ProcessFlowSProj.API.Migrations
 
             modelBuilder.Entity("ProcessFlowSProj.API.Entities.StaffEntity", b =>
                 {
-                    b.HasOne("ProcessFlowSProj.API.Entities.StaffRoleEntity", "StaffRoleEntity")
+                    b.HasOne("ProcessFlowSProj.API.Entities.RoleEntity", "RoleEntity")
                         .WithMany("StaffEntities")
-                        .HasForeignKey("RoleId")
+                        .HasForeignKey("RoleEntityId")
                         .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("ProcessFlowSProj.API.Entities.StaffLoginEntity", "StaffLoginEntity")
-                        .WithMany()
-                        .HasForeignKey("StaffLoginEntityId");
                 });
 
-            modelBuilder.Entity("ProcessFlowSProj.API.Entities.StaffLoginEntity", b =>
+            modelBuilder.Entity("ProcessFlowSProj.API.Entities.StaffUserRole", b =>
                 {
+                    b.HasOne("ProcessFlowSProj.API.Entities.Role", "Role")
+                        .WithMany("StaffUserRoles")
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
                     b.HasOne("ProcessFlowSProj.API.Entities.StaffEntity", "StaffEntity")
-                        .WithOne()
-                        .HasForeignKey("ProcessFlowSProj.API.Entities.StaffLoginEntity", "StaffId")
+                        .WithMany("StaffUserRoles")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

@@ -14,15 +14,8 @@ namespace ProcessFlowSProj.API.Entities
         [Key]
         public override int Id { get; set; }
 
-
-        [ForeignKey("StaffLoginEntity")]
-        public int? StaffLoginEntityId { get; set; }
-
-        public StaffLoginEntity StaffLoginEntity { get; set; }
-
-
-        public int RoleId { get; set; }
-        public StaffRoleEntity StaffRoleEntity { get; set; }
+        public int RoleEntityId { get; set; }
+        public RoleEntity RoleEntity { get; set; }
 
         [Required]
         public string FirstName { get; set; }
@@ -39,6 +32,8 @@ namespace ProcessFlowSProj.API.Entities
 
         [EmailAddress]
         public override string Email { get; set; }
+
+        public ICollection<StaffUserRole> StaffUserRoles { get; set; }
 
         public WorkFlowTrailEntity WorkFlowTrailEntityApprovedBy { get; set; }
         public WorkFlowTrailEntity WorkFlowTrailEntityRequestStaff { get; set; }

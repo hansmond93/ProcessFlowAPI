@@ -104,14 +104,14 @@ namespace ProcessFlowSProj.API.Entities
         {
             var level = _dataContext.ApprovalLevelEntities.Where(x => x.OperationId == operationId && x.Active == true)
                                                            .OrderBy(x => x.Position)
-                                                           .Select(x => new { x.ApprovalLevelId, x.RoleId})
+                                                           .Select(x => new { x.ApprovalLevelId, x.RoleEntityId})
                                                            .FirstOrDefault();
             if (level == null)
                 throw new CustomException("The Operation has not been Setup");
 
-            var levelOfToStaffId = _dataContext.StaffEntities.SingleOrDefault(x => x.Id == toStaffId).RoleId;
+            var levelOfToStaffId = _dataContext.StaffEntities.SingleOrDefault(x => x.Id == toStaffId).RoleEntityId;
 
-            if (level.RoleId != levelOfToStaffId)
+            if (level.RoleEntityId != levelOfToStaffId)
                 throw new CustomException("An Error occurred, Please Contact the System Adminstrator");
 
             //check if there is a similar request in the db that is still ongoing
@@ -158,8 +158,8 @@ namespace ProcessFlowSProj.API.Entities
             var fromStaff = _dataContext.StaffEntities.Where(x => x.Id == fromStaffId).SingleOrDefault();
 
 
-            _nextLevelRoleId = level.RoleId;
-            _nextLevelRoleName = _dataContext.StaffRoleEntities.SingleOrDefault(x => x.Id == level.RoleId).RoleName;
+            _nextLevelRoleId = level.RoleEntityId;
+            _nextLevelRoleName = _dataContext.RoleEntities.SingleOrDefault(x => x.Id == level.RoleEntityId).RoleName;
             _nextLevelFirstname = toStaff.FirstName;
             _nextLevelLastname = toStaff.LastName;
             _nextLevelMiddlename = toStaff.MiddleName ?? "";
@@ -192,7 +192,7 @@ namespace ProcessFlowSProj.API.Entities
                 return;
             }
 
-            var roleOfToStaffId = _dataContext.StaffEntities.SingleOrDefault(x => x.Id == toStaffId).RoleId;
+            var roleOfToStaffId = _dataContext.StaffEntities.SingleOrDefault(x => x.Id == toStaffId).RoleEntityId;
 
             if (roleOfToStaffId <= 0) throw new CustomException("An Error Occurred, Please Contact the System Administrator");
 
@@ -238,8 +238,8 @@ namespace ProcessFlowSProj.API.Entities
 
                 var staff = _dataContext.StaffEntities.FirstOrDefault(s => s.Id == levelsss[0].FromStaffId);
 
-                _nextLevelRoleId = staff.RoleId;
-                _nextLevelRoleName = _dataContext.StaffRoleEntities.FirstOrDefault(r => r.Id == staff.RoleId).RoleName;
+                _nextLevelRoleId = staff.RoleEntityId;
+                _nextLevelRoleName = _dataContext.RoleEntities.FirstOrDefault(r => r.Id == staff.RoleEntityId).RoleName;
                 _nextLevelFirstname = staff.FirstName;
                 _nextLevelMiddlename = staff.MiddleName;
                 _nextLevelLastname = staff.LastName;
@@ -256,7 +256,7 @@ namespace ProcessFlowSProj.API.Entities
 
             for (int i = 0; i < approvalLevels.Count(); i++)
             {
-                if(approvalLevels[i].RoleId == roleOfToStaffId)
+                if(approvalLevels[i].RoleEntityId == roleOfToStaffId)
                 {
                     nextLevel = approvalLevels[i];          //check if i++ is evaluated first before the array is called
                     previousLevel = approvalLevels[--i];    //check if this truly picks the previous level
@@ -301,8 +301,8 @@ namespace ProcessFlowSProj.API.Entities
 
                 var staff = _dataContext.StaffEntities.FirstOrDefault(s => s.Id == toStaffId);
 
-                _nextLevelRoleId = staff.RoleId;
-                _nextLevelRoleName = _dataContext.StaffRoleEntities.FirstOrDefault(r => r.Id == staff.RoleId).RoleName;
+                _nextLevelRoleId = staff.RoleEntityId;
+                _nextLevelRoleName = _dataContext.RoleEntities.FirstOrDefault(r => r.Id == staff.RoleEntityId).RoleName;
                 _nextLevelFirstname = staff.FirstName;
                 _nextLevelMiddlename = staff.MiddleName ?? String.Empty;
                 _nextLevelLastname = staff.LastName;
@@ -312,7 +312,7 @@ namespace ProcessFlowSProj.API.Entities
 
         private void ProcessReferredApproval(int operationId, int targetId, int? toStaffId, int fromStaffId, string comment, byte approvalStatusId)
         {
-            var roleOfRefferdStaffId = _dataContext.StaffEntities.SingleOrDefault(x => x.Id == toStaffId).RoleId;
+            var roleOfRefferdStaffId = _dataContext.StaffEntities.SingleOrDefault(x => x.Id == toStaffId).RoleEntityId;
 
             if (roleOfRefferdStaffId <= 0) throw new CustomException("An Error Occurred, Please Contact the System Administrator");
 
@@ -348,8 +348,8 @@ namespace ProcessFlowSProj.API.Entities
                 };
 
                 var staff = _dataContext.StaffEntities.FirstOrDefault(s => s.Id == toStaffId);
-                _nextLevelRoleId = staff.RoleId;
-                _nextLevelRoleName = _dataContext.StaffRoleEntities.FirstOrDefault(r => r.Id == staff.RoleId).RoleName;
+                _nextLevelRoleId = staff.RoleEntityId;
+                _nextLevelRoleName = _dataContext.RoleEntities.FirstOrDefault(r => r.Id == staff.RoleEntityId).RoleName;
                 _nextLevelFirstname = staff.FirstName;
                 _nextLevelMiddlename = staff.MiddleName ?? String.Empty;
                 _nextLevelLastname = staff.LastName;
@@ -377,7 +377,7 @@ namespace ProcessFlowSProj.API.Entities
             if (toStaffIdFromWorkflowTrail[0].ToStaffId == fromStaffId)    //check if this staffId matches the current staffId that is rejecting the request
             {
                 var levelOfSender = (from ale in _dataContext.ApprovalLevelEntities
-                                    join se in _dataContext.StaffEntities on ale.RoleId equals se.RoleId
+                                    join se in _dataContext.StaffEntities on ale.RoleEntityId equals se.RoleEntityId
                                     where se.Id == fromStaffId
                                     select ale.ApprovalLevelId).FirstOrDefault();
 
@@ -413,7 +413,7 @@ namespace ProcessFlowSProj.API.Entities
 
         private void ProcessFinalApproval(int operationId, int targetId, int fromStaffId, string comment, byte approvalStatusId)
         {
-            var roleOfFromStaffId = _dataContext.StaffEntities.SingleOrDefault(x => x.Id == fromStaffId).RoleId;   //get role of the fromStaffId
+            var roleOfFromStaffId = _dataContext.StaffEntities.SingleOrDefault(x => x.Id == fromStaffId).RoleEntityId;   //get role of the fromStaffId
 
             if (roleOfFromStaffId <= 0) throw new CustomException("An Error Occurred, Please Contact the System Administrator");
 
@@ -421,7 +421,7 @@ namespace ProcessFlowSProj.API.Entities
                                                                .OrderByDescending(x => x.Position)
                                                                .ToArray();
 
-            if (approvaLevels[0].RoleId == roleOfFromStaffId)    //if the roleId of the fromStaffId matches the role of the final approval in the setup
+            if (approvaLevels[0].RoleEntityId == roleOfFromStaffId)    //if the roleId of the fromStaffId matches the role of the final approval in the setup
             {
                 var requestStafIdOnTrail = _dataContext.WorkFlowTrailEntities.Where(x => x.OperationId == operationId
                                                                         && x.TargetId == targetId
@@ -472,9 +472,9 @@ namespace ProcessFlowSProj.API.Entities
                 if (data == null) throw new CustomException("Operation has not been setup");
 
                 var staffs = (from se in _dataContext.StaffEntities
-                             join sre in _dataContext.StaffRoleEntities on se.RoleId equals sre.Id
-                             where se.RoleId == data[0].RoleId
-                             select new StaffForApprovalDto
+                             join sre in _dataContext.RoleEntities on se.RoleEntityId equals sre.Id
+                             where se.RoleEntityId == data[0].RoleEntityId
+                              select new StaffForApprovalDto
                              {
                                  StaffId = se.Id,
                                  StaffName = se.FirstName + " " +se.LastName,
@@ -503,7 +503,7 @@ namespace ProcessFlowSProj.API.Entities
                 if(trailData[0].ApprovalStatusId == ApprovalStatusEntity.Referred)
                 {
                     var staff = (from se in _dataContext.StaffEntities
-                                 join sre in _dataContext.StaffRoleEntities on se.RoleId equals sre.Id
+                                 join sre in _dataContext.RoleEntities on se.RoleEntityId equals sre.Id
                                  where se.Id == trailData[0].FromStaffId
                                  select new StaffForApprovalDto
                                  {
@@ -537,10 +537,10 @@ namespace ProcessFlowSProj.API.Entities
                 }
 
                 var staffsEnumerable = (from se in _dataContext.StaffEntities
-                                         join sre in _dataContext.StaffRoleEntities on se.RoleId equals sre.Id
-                                         join ale in _dataContext.ApprovalLevelEntities on se.RoleId equals ale.RoleId
-                                         where se.RoleId == nextlevel.RoleId
-                                         select new StaffForApprovalDto
+                                         join sre in _dataContext.RoleEntities on se.RoleEntityId equals sre.Id
+                                         join ale in _dataContext.ApprovalLevelEntities on se.RoleEntityId equals ale.RoleEntityId
+                                        where se.RoleEntityId == nextlevel.RoleEntityId
+                                        select new StaffForApprovalDto
                                          {
                                              StaffId = se.Id,
                                              StaffName = se.FirstName + " " + se.LastName,
@@ -558,7 +558,7 @@ namespace ProcessFlowSProj.API.Entities
             //throw new NotImplementedException();
 
             var roleIdOfStaffId = (from se in _dataContext.StaffEntities
-                                   join sre in _dataContext.StaffRoleEntities on se.RoleId equals sre.Id
+                                   join sre in _dataContext.RoleEntities on se.RoleEntityId equals sre.Id
                                    where se.Id == staffId
                                    select new
                                    {
@@ -573,7 +573,7 @@ namespace ProcessFlowSProj.API.Entities
 
             if (setUpData == null) throw new CustomException("Operation has not ben setup");
 
-            if (setUpData[0].RoleId == roleIdOfStaffId.Id) 
+            if (setUpData[0].RoleEntityId == roleIdOfStaffId.Id) 
                 return true;
 
             return false;
@@ -618,7 +618,7 @@ namespace ProcessFlowSProj.API.Entities
 
             var response = new WorkFlowResponseDto
             {
-                RoleName = _dataContext.StaffRoleEntities.SingleOrDefault(x => x.Id == _nextLevelRoleId).RoleName,
+                RoleName = _dataContext.RoleEntities.SingleOrDefault(x => x.Id == _nextLevelRoleId).RoleName,
                 RoleId = _nextLevelRoleId.Value,
                 FullName = _nextLevelFirstname + " " + _nextLevelMiddlename + " " + _nextLevelLastname,
                 //Add staff Id later

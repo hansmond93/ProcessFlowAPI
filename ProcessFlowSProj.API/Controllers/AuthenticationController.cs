@@ -5,6 +5,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -19,7 +20,8 @@ using ProcessFlowSProj.API.Interface;
 
 namespace ProcessFlowSProj.API.Controllers
 {
-    [Route("api/[controller]")]
+    [AllowAnonymous]
+    [Route("api/auth/")]
     [ApiController]
     public class AuthenticationController : ControllerBase
     {
@@ -28,31 +30,28 @@ namespace ProcessFlowSProj.API.Controllers
         private readonly UserManager<StaffEntity> _userManager;
         private readonly SignInManager<StaffEntity> _signInManager;
         private readonly ITokenDecryptionHelper _token;
+        private readonly IMapper _mapper;
 
         public AuthenticationController(IAuthenticationRepository iAuthRepo,
                                         IConfiguration iConfig,
                                         UserManager<StaffEntity> userManager,
                                         SignInManager<StaffEntity> signInManager,
-                                        ITokenDecryptionHelper token)
+                                        ITokenDecryptionHelper token,
+                                        IMapper mapper)
         {
             _iAuthRepo = iAuthRepo;
             _iConfig = iConfig;
             _userManager = userManager;
             _signInManager = signInManager;
             _token = token;
+            _mapper = mapper;
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register(StaffForRegisterationDto userForReg)      //not on point check REPO
+        public async Task<IActionResult> Register(StaffForRegisterationDto userForReg)
         {
             try
             {
-                //Validate Request
-                userForReg.Username = userForReg.Username.Trim().ToLower();
-
-                if (await _iAuthRepo.UserExists(userForReg.Username))
-                    return BadRequest("Username already exists");
-
                 var userToCreate = new StaffEntity
                 {
                     FirstName = userForReg.FirstName,
@@ -60,15 +59,19 @@ namespace ProcessFlowSProj.API.Controllers
                     MiddleName = userForReg.MiddleName,
                     UserName = userForReg.Username,
                     Gender = userForReg.Gender,
-                    RoleId = userForReg.RoleId
+                    RoleEntityId = userForReg.RoleEntityId
                 };
 
-                var createdUser = await _iAuthRepo.Register(userToCreate, userForReg.Password);
+                var result = await _userManager.CreateAsync(userToCreate, userForReg.Password);
 
-                if (createdUser == null)
-                    return StatusCode(500);
+                var createdUser = _mapper.Map<CreatedStaffForReturnDto>(userToCreate);
 
-                return Ok(createdUser); //modify this to return 201
+                if (result.Succeeded)
+                {
+                    return Ok(createdUser);  //modify to 201
+                }
+                
+                return BadRequest(result.Errors);
             }
             catch (Exception ex)
             {
@@ -81,25 +84,19 @@ namespace ProcessFlowSProj.API.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login(StaffForLoginDto userForLogin)
         {
-            var userFromRepo = await _iAuthRepo.Login(userForLogin.Username, userForLogin.Password);
+            var user = await _userManager.FindByNameAsync(userForLogin.Username);
 
-            if(userFromRepo == null)
-                return Unauthorized();
+            var loginResult = await _signInManager.CheckPasswordSignInAsync(user, userForLogin.Password, false);
 
-            var loginResult = await _signInManager.PasswordSignInAsync(userForLogin.Username, userForLogin.Password, isPersistent: false, lockoutOnFailure: false);
-
-            if(!loginResult.Succeeded)
-                return Unauthorized();
-
-            var userFromManager = await _userManager.Users.FirstOrDefaultAsync(u => u.Id == userFromRepo.StaffId);
-
-            if (userFromManager == null)
+            if(loginResult.Succeeded)
             {
-                return Unauthorized();  //check for other kindda trouble
-            }
-            var token = _iAuthRepo.GetToken(userFromManager);
+                var token = await _iAuthRepo.GetToken(user);
 
-            return Ok(token);
+                return Ok(new { token });
+            }
+
+            return Unauthorized(); 
+            
         }
 
         [HttpPost("logout")]    //test this method

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using ProcessFlowSProj.API.Entities;
 using System;
@@ -8,19 +9,20 @@ using System.Threading.Tasks;
 
 namespace ProcessFlowSProj.API.Data
 {
-    public class DataContext : IdentityDbContext<StaffEntity, StaffRoleEntity, int>
+    public class DataContext : IdentityDbContext<StaffEntity, Role, int,
+                                IdentityUserClaim<int>, StaffUserRole, IdentityUserLogin<int>,
+                                IdentityRoleClaim<int>, IdentityUserToken<int>>
     {
         public DataContext(DbContextOptions<DataContext> options) : base(options)
         {
             
         }
 
-        public DbSet<StaffLoginEntity> StaffLoginEntities{ get; set; }
         public DbSet<ApprovalLevelEntity> ApprovalLevelEntities { get; set; }
         public DbSet<ApprovalStatusEntity> ApprovalStatusEntities { get; set; }
         public DbSet<OperationEntity> OperationEntities { get; set; }
         public DbSet<StaffEntity> StaffEntities { get; set; }
-        public DbSet<StaffRoleEntity> StaffRoleEntities { get; set; }
+        public DbSet<RoleEntity> RoleEntities { get; set; }
         public DbSet<WorkFLowStatusEntity> WorkFLowStatusEntity { get; set; }
         public DbSet<WorkFlowTrailEntity> WorkFlowTrailEntities { get; set; }
         public DbSet<ImagesEntity> ImagesEntities { get; set; }
@@ -33,18 +35,33 @@ namespace ProcessFlowSProj.API.Data
         {
             base.OnModelCreating(builder);
 
+            builder.Entity<StaffUserRole>(sue =>
+            {
+                sue.HasKey(ur => new { ur.UserId, ur.RoleId });
+
+                sue.HasOne(ur => ur.StaffEntity)
+                    .WithMany(r => r.StaffUserRoles)
+                    .HasForeignKey(ur => ur.UserId)
+                    .IsRequired();
+
+                sue.HasOne(ur => ur.Role)
+                    .WithMany(r => r.StaffUserRoles)
+                    .HasForeignKey(ur => ur.RoleId)
+                    .IsRequired();
+            });
+
             builder.Entity<StaffEntity>()
                     .ToTable(nameof(StaffEntity))
                     .HasKey(u => u.Id);
 
-            builder.Entity<StaffRoleEntity>()
-                    .ToTable(nameof(StaffRoleEntity))
+            builder.Entity<RoleEntity>()
+                    .ToTable(nameof(RoleEntity))
                     .HasKey(u => u.Id);
 
             builder.Entity<StaffEntity>()
-                    .HasOne(r => r.StaffRoleEntity)
+                    .HasOne(r => r.RoleEntity)
                     .WithMany(s => s.StaffEntities)
-                    .HasForeignKey(x => x.RoleId)
+                    .HasForeignKey(x => x.RoleEntityId)
                     .OnDelete(DeleteBehavior.Restrict);
 
 

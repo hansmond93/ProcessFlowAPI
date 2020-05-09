@@ -12,7 +12,6 @@ namespace ProcessFlowSProj.API.Controllers
 {
     [Route("api/setup/{operationId}")]
     [ApiController]
-    [Authorize]
     public class SetupController : ControllerBase
     {
         private readonly ITokenDecryptionHelper _token;
@@ -28,6 +27,7 @@ namespace ProcessFlowSProj.API.Controllers
         {
             try
             {
+                int staffId = _token.GetStaffId();  //use this guy for validation and make sure u authorize this controller for admin role only
                 var checkValidOperation = await _setup.CheckIfOperationExists(operationId);
 
                 if (!checkValidOperation)

@@ -15,7 +15,6 @@ namespace ProcessFlowSProj.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize]
     public class ProjectController : ControllerBase
     {
         private readonly IWorkFlow _workFlow;
@@ -29,19 +28,19 @@ namespace ProcessFlowSProj.API.Controllers
             _token = token;
         }
 
-        [HttpGet("testGet")]
-        public ActionResult<IEnumerable<string>> Get()
-        {
-            return new string[] { "value1", "value2" };
-        }
-
 
         //api/test/goforapproval
-        [HttpPost("saveProject")]
-        public async Task<IActionResult> CreateProject(ProjectForCreationDto project)
+        [HttpPost("saveProject/{staffId}")]
+        public async Task<IActionResult> CreateProject(ProjectForCreationDto project, int staffId)
         {
             if (project == null)
                 return BadRequest();
+
+            if (_token.GetStaffId() != staffId)
+                return Unauthorized();
+
+            //if (staffId != int.Parse(User.FindFirst(c => c.Type == "StaffId").Value))
+            //    return Unauthorized();
 
             try
             {
@@ -55,7 +54,6 @@ namespace ProcessFlowSProj.API.Controllers
                 throw ex;
             }
 
-
         }
 
         [HttpGet("getProject/{projectId}", Name = "GetProject")]
@@ -67,6 +65,22 @@ namespace ProcessFlowSProj.API.Controllers
 
                 if (projectFromRepo == null)
                     return BadRequest("Project does not exist");
+
+                return Ok(projectFromRepo);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+        [HttpGet("{staffId}", Name = "GetProjectByStaffId")]
+        public async Task<IActionResult> GetProjectByStaffId(int staffId)
+        {
+            try
+            {
+                var projectFromRepo = await _projectRepo.GetALlProjectByStaffId(staffId);
 
                 return Ok(projectFromRepo);
             }

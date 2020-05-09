@@ -32,7 +32,7 @@ namespace ProcessFlowSProj.API.Common
         {
             if (_contextAccessor.HttpContext == null || _contextAccessor.HttpContext.User == null)
                 throw new CustomException("User can't be determinded");
-
+            var test = _contextAccessor.HttpContext;
             var tokenIdentity = new ClaimsIdentity(_contextAccessor.HttpContext.User.Identity);
 
             if (tokenIdentity != null)

@@ -10,6 +10,8 @@ namespace ProcessFlowSProj.API.Interface
     {
         Task<IEnumerable<GetProjectDto>> GetAllProjects();
 
+        Task<IEnumerable<GetProjectDto>> GetALlProjectByStaffId(int staffId);
+
         Task<GetProjectDto> GetProjectById(int projectId);
 
         Task<GetProjectDto> SaveProject(ProjectForCreationDto project);

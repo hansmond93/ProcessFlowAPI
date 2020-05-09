@@ -16,6 +16,6 @@ namespace ProcessFlowSProj.API.Dtos
         [Required]
         [Compare("Password")]
         public string ConfirmPassword { get; set; }
-        public int RoleId { get; set; }
+        public int RoleEntityId { get; set; }
     }
 }
