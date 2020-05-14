@@ -12,6 +12,7 @@ namespace ProcessFlowSProj.API.Entities
         public int ApprovalStatusId { get; set; }
         public string ApprovalStatusName { get; set; }
         public WorkFlowTrailEntity WorkFlowTrailEntity { get; set; }
+        public ICollection<ProjectEntity> ProjectEntities { get; set; }
 
         public static readonly int Pending = 0;
         public static readonly int Procesing = 1;

@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace ProcessFlowSProj.API.Controllers
 {
+    [Authorize(Policy = "RequireAdminRole")]
     [Route("api/setup/{operationId}")]
     [ApiController]
     public class SetupController : ControllerBase

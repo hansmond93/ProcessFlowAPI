@@ -32,11 +32,11 @@ namespace ProcessFlowSProj.API.Migrations
             migrationBuilder.Sql("SET IDENTITY_INSERT [dbo].[ApprovalLevelEntities] OFF");
 
             migrationBuilder.Sql("SET IDENTITY_INSERT [dbo].[ApprovalStatusEntities] ON");
-            migrationBuilder.Sql("INSERT [dbo].[ApprovalStatusEntities] ([ApprovalStatusId], [ApprovalStatusName]) VALUES (1, N'Pending')");
-            migrationBuilder.Sql("INSERT [dbo].[ApprovalStatusEntities] ([ApprovalStatusId], [ApprovalStatusName]) VALUES (2, N'Processing')");
-            migrationBuilder.Sql("INSERT [dbo].[ApprovalStatusEntities] ([ApprovalStatusId], [ApprovalStatusName]) VALUES (3, N'Approved')");
-            migrationBuilder.Sql("INSERT [dbo].[ApprovalStatusEntities] ([ApprovalStatusId], [ApprovalStatusName]) VALUES (4, N'Rejected')");
-            migrationBuilder.Sql("INSERT [dbo].[ApprovalStatusEntities] ([ApprovalStatusId], [ApprovalStatusName]) VALUES (5, N'Referred')");
+            migrationBuilder.Sql("INSERT [dbo].[ApprovalStatusEntities] ([ApprovalStatusId], [ApprovalStatusName]) VALUES (0, N'Pending')");
+            migrationBuilder.Sql("INSERT [dbo].[ApprovalStatusEntities] ([ApprovalStatusId], [ApprovalStatusName]) VALUES (1, N'Processing')");
+            migrationBuilder.Sql("INSERT [dbo].[ApprovalStatusEntities] ([ApprovalStatusId], [ApprovalStatusName]) VALUES (2, N'Approved')");
+            migrationBuilder.Sql("INSERT [dbo].[ApprovalStatusEntities] ([ApprovalStatusId], [ApprovalStatusName]) VALUES (3, N'Rejected')");
+            migrationBuilder.Sql("INSERT [dbo].[ApprovalStatusEntities] ([ApprovalStatusId], [ApprovalStatusName]) VALUES (4, N'Referred')");
             migrationBuilder.Sql("SET IDENTITY_INSERT [dbo].[ApprovalStatusEntities] OFF");
 
             

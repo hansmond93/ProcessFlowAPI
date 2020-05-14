@@ -30,5 +30,7 @@ namespace ProcessFlowSProj.API.Dtos
         public string CompanyName { get; set; }
 
         public string CompanyEmail { get; set; }
+
+        public int ApprovalStatusId { get; set; }
     }
 }

@@ -36,6 +36,10 @@ namespace ProcessFlowSProj.API.Entities
         [Required]
         public string CompanyName { get; set; }
 
+
+        public int ApprovalStatusId { get; set; }
+        public ApprovalStatusEntity ApprovalStatus { get; set; }
+
         [Required]
         [EmailAddress]
         public string CompanyEmail { get; set; }

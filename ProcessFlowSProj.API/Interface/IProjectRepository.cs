@@ -24,5 +24,6 @@ namespace ProcessFlowSProj.API.Interface
 
         Task<bool> CheckIfProjectHasSpecificImage(int imageId, int projectId);
         Task<IEnumerable<GetProjectApprovalDto>> GetPendingProjectApprovals(int staffId, int operationId);
+        Task<DashboardInfoDto> GetDashboardInfoByStaffId(int id);
     }
 }

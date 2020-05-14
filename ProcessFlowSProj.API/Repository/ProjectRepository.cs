@@ -189,5 +189,21 @@ namespace ProcessFlowSProj.API.Repository
 
             return approvals;   //see what it returns when there is nothing to return
         }
+
+        public async Task<DashboardInfoDto> GetDashboardInfoByStaffId(int id)
+        {
+            var projects = await _context.ProjectEntities.Where(p => p.CreatedBy == id).ToListAsync();
+
+            var dashboardInfo = new DashboardInfoDto
+            {
+                TotalProject = projects.Count,
+                TotalProjectAmount = projects.Select(p => p.ProposedAmount).Sum(),
+                TotalApprovedAmount = projects.Where( p => p.ApprovedAmount != null).Select(p => p.ApprovedAmount).Sum(),
+                TotalCompletedProject = projects.Where(p => p.ApprovalStatusId == WorkFLowStatusEntity.Completed).Count(),
+            };
+
+            return dashboardInfo;
+        }
+
     } 
 }

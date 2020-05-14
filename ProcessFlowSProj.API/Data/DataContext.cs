@@ -109,6 +109,11 @@ namespace ProcessFlowSProj.API.Data
                 .WithOne(x => x.ApprovalStatus)
                 .HasForeignKey<WorkFlowTrailEntity>(w => w.ApprovalStatusId);
 
+            builder.Entity<ProjectEntity>()
+                .HasOne(x => x.ApprovalStatus)
+                .WithMany(x => x.ProjectEntities)
+                .HasForeignKey(w => w.ApprovalStatusId);
+
             builder.Entity<WorkFLowStatusEntity>()
                 .HasOne(x => x.WorkFlowTrailEntity)
                 .WithOne(x => x.Status)

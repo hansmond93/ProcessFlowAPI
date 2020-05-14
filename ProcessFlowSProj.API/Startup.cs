@@ -79,23 +79,6 @@ namespace ProcessFlowSProj.API
 
                 });
 
-            //var signingKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Configuration.GetSection("AppSettings:Token").Value));
-            //services.AddAuthentication(options =>
-            //{
-            //    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-            //    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            //}).AddJwtBearer(config =>
-            //{
-            //    config.RequireHttpsMetadata = false;
-            //    config.SaveToken = true;
-            //    config.TokenValidationParameters = new TokenValidationParameters()
-            //    {
-            //        IssuerSigningKey = signingKey,
-            //        ValidateAudience = false,
-            //        ValidateIssuer = false,
-            //        ValidateIssuerSigningKey = true
-            //    };
-            //});
 
             #endregion
 

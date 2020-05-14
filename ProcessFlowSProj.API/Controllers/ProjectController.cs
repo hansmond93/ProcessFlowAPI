@@ -29,6 +29,17 @@ namespace ProcessFlowSProj.API.Controllers
         }
 
 
+        [HttpGet("dashboard/information/{staffId}")]
+        public async Task<IActionResult> GetDashbordInformationByStaffId(int staffId)
+        {
+            if (_token.GetStaffId() != staffId)
+                return Unauthorized();
+
+            var data = await _projectRepo.GetDashboardInfoByStaffId(staffId);
+
+            return Ok(data);
+        }
+
         //api/test/goforapproval
         [HttpPost("saveProject/{staffId}")]
         public async Task<IActionResult> CreateProject(ProjectForCreationDto project, int staffId)
@@ -39,8 +50,6 @@ namespace ProcessFlowSProj.API.Controllers
             if (_token.GetStaffId() != staffId)
                 return Unauthorized();
 
-            //if (staffId != int.Parse(User.FindFirst(c => c.Type == "StaffId").Value))
-            //    return Unauthorized();
 
             try
             {

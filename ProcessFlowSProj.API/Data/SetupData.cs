@@ -32,7 +32,7 @@ namespace ProcessFlowSProj.API.Data
             var _userManager = scope.ServiceProvider.GetRequiredService<UserManager<StaffEntity>>();
             var _roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<Role>>();
 
-            if (!_userManager.Users.Where(u => u.UserName == adminUsername).Any())
+            if (!_userManager.Users.Where(u => u.NormalizedUserName == adminUsername.ToUpperInvariant()).Any())
             {
                 //create some roles
                 var roles = new List<Role>
